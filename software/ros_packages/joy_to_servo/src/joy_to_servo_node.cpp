@@ -50,41 +50,18 @@
 const std::string JOY_TOPIC = "/joy";
 const std::string TWIST_TOPIC = "/servo_node/delta_twist_cmds";
 const std::string JOINT_TOPIC = "/servo_node/delta_joint_cmds";
-const std::string EEF_FRAME_ID = "rover_hand";
+const std::string EEF_FRAME_ID = "arm_gripper";
 const std::string BASE_FRAME_ID = "base_link";
 
-// Enums for button names -> axis/button array index
-// For XBOX 1 controller
-enum Axis
-{
-  LEFT_STICK_X = 0,
-  LEFT_STICK_Y = 1,
-  LEFT_TRIGGER = 2,
-  RIGHT_STICK_X = 3,
-  RIGHT_STICK_Y = 4,
-  RIGHT_TRIGGER = 5,
-  D_PAD_X = 6,
-  D_PAD_Y = 7
-};
-enum Button
-{
-  A = 0,
-  B = 1,
-  X = 2,
-  Y = 3,
-  LEFT_BUMPER = 4,
-  RIGHT_BUMPER = 5,
-  CHANGE_VIEW = 6,
-  MENU = 7,
-  HOME = 8,
-  LEFT_STICK_CLICK = 9,
-  RIGHT_STICK_CLICK = 10
-};
+struct ControllerMappings {
 
-// Some axes have offsets (e.g. the default trigger position is 1.0 not 0)
-// This will map the default values for the axes
-std::map<Axis, double> AXIS_DEFAULTS = { { LEFT_TRIGGER, 1.0 }, { RIGHT_TRIGGER, 1.0 } };
-std::map<Button, double> BUTTON_DEFAULTS;
+  std::map<std::string, int> AXIS_MAP;
+  std::map<std::string, int> BUTTON_MAP;
+
+  std::map<std::string, double> AXIS_DEFAULTS;
+  std::map<std::string, double> BUTTON_DEFAULTS;
+
+};
 
 // To change controls or setup a new controller, all you should to do is change the above enums and the follow 2
 // functions
@@ -98,88 +75,97 @@ std::map<Button, double> BUTTON_DEFAULTS;
 bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& buttons,
                      std::unique_ptr<geometry_msgs::msg::TwistStamped>& twist,
                      std::unique_ptr<control_msgs::msg::JointJog>& joint,
-                     bool& use_ik)
+                     bool& use_ik, const ControllerMappings& controllerMappings)
 {
   // Give joint jogging priority because it is only buttons
   // If any joint jog command is requested, we are only publishing joint commands
-  if(buttons[MENU]){
+  if(buttons[controllerMappings.BUTTON_MAP.at("MENU")]){
     use_ik = false;
     
   }
-  else if(buttons[CHANGE_VIEW]){
+  else if(buttons[controllerMappings.BUTTON_MAP.at("CHANGE_VIEW")]){
     use_ik = true;
   }
 
   if(use_ik){ //ik controls
-    if (axes[D_PAD_Y] || buttons[LEFT_BUMPER] || buttons[RIGHT_BUMPER])
+    if (axes[controllerMappings.AXIS_MAP.at("D_PAD_Y")] || buttons[controllerMappings.BUTTON_MAP.at("LEFT_BUMPER")] || buttons[controllerMappings.BUTTON_MAP.at("RIGHT_BUMPER")])
     {
       // Map the D_PAD to the proximal joints
       // joint->joint_names.push_back("base_joint");
-      // joint->velocities.push_back(axes[D_PAD_X]);
+      // joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_X")]);
       joint->joint_names.push_back("shoulder_joint");
-      joint->velocities.push_back(axes[D_PAD_Y]);
-      joint->joint_names.push_back("wrist_roll_joint");
-      joint->velocities.push_back(buttons[RIGHT_BUMPER] - buttons[LEFT_BUMPER]);
+      joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_Y")]);
+      // joint->joint_names.push_back("wrist_roll_joint");
+      // joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_X")]);
       // Map the diamond to the distal joints
       return false;
     }
 
     // The bread and butter: map buttons to twist commands
-    twist->twist.linear.z = axes[LEFT_STICK_Y];
-    twist->twist.linear.x = -1.0 * axes[LEFT_STICK_X];
+    twist->twist.linear.y = axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_Y")];
+    twist->twist.linear.x = -1.0 * axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_X")];
 
-    double lin_y_right = -0.5 * (axes[RIGHT_TRIGGER] - AXIS_DEFAULTS.at(RIGHT_TRIGGER));
-    double lin_y_left = 0.5 * (axes[LEFT_TRIGGER] - AXIS_DEFAULTS.at(LEFT_TRIGGER));
-    twist->twist.linear.y = lin_y_right + lin_y_left;
+    double lin_y_right = -0.5 * (axes[controllerMappings.AXIS_MAP.at("RIGHT_TRIGGER")] - controllerMappings.AXIS_DEFAULTS.at("RIGHT_TRIGGER"));
+    double lin_y_left = 0.5 * (axes[controllerMappings.AXIS_MAP.at("LEFT_TRIGGER")] - controllerMappings.AXIS_DEFAULTS.at("LEFT_TRIGGER"));
+    twist->twist.linear.z = lin_y_right + lin_y_left;
 
+    //pitch
+    twist->twist.angular.x = axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_Y")];
+    //Yaw
+    twist->twist.angular.y = axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_X")];
+    // Roll
+    twist->twist.angular.z = axes[controllerMappings.AXIS_MAP.at("D_PAD_X")];
 
-    twist->twist.angular.x = axes[RIGHT_STICK_Y];
-
-    // double roll_positive = buttons[RIGHT_BUMPER];
-    // double roll_negative = -1 * (buttons[LEFT_BUMPER]);
+    // double roll_positive = buttons[controllerMappings.BUTTON_MAP.at("RIGHT_BUMPER")];
+    // double roll_negative = -1 * (buttons[xontrollerMappings.BUTTON_MAP.at("LEFT_BUMPER")]);
     // twist->twist.angular.z = roll_positive + roll_negative;
 
     return true;
   }
   else{ //joint by joint control
     joint->joint_names.push_back("base_joint");
-    joint->velocities.push_back(axes[D_PAD_X] * -0.30);
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_X")] * -0.30);
     joint->joint_names.push_back("shoulder_joint");
-    joint->velocities.push_back(axes[D_PAD_Y] * -0.25);
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("D_PAD_Y")] * -0.25);
     joint->joint_names.push_back("elbow_pitch_joint");
-    joint->velocities.push_back(axes[LEFT_STICK_Y] * -0.30); //THIS JOINT IS BACKWARDS
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_Y")] * -0.30); //THIS JOINT IS BACKWARDS
     joint->joint_names.push_back("elbow_roll_joint");
-    joint->velocities.push_back(axes[LEFT_STICK_X] * -0.25);
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("LEFT_STICK_X")] * -0.25);
     joint->joint_names.push_back("wrist_pitch_joint");
-    joint->velocities.push_back(axes[RIGHT_STICK_Y] * -0.30);
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_Y")] * -0.30);
     joint->joint_names.push_back("wrist_roll_joint");
-    joint->velocities.push_back(axes[RIGHT_STICK_X]);
+    joint->velocities.push_back(axes[controllerMappings.AXIS_MAP.at("RIGHT_STICK_X")]);
 
     return false;
   }
-
-
 }
 
 /** \brief // This should update the frame_to_publish_ as needed for changing command frame via controller
  * @param frame_name Set the command frame to this
  * @param buttons The vector of discrete controller button values
  */
-void updateCmdFrame(std::string& frame_name, const std::vector<int>& buttons)
+void updateCmdFrame(std::string& frame_name, const std::vector<int>& buttons, const ControllerMappings& controllerMappings)
 {
-  if (buttons[CHANGE_VIEW] && frame_name == EEF_FRAME_ID)
-    frame_name = BASE_FRAME_ID;
-  else if (buttons[MENU] && frame_name == BASE_FRAME_ID)
+  if (buttons[controllerMappings.BUTTON_MAP.at("CHANGE_VIEW")] && frame_name == EEF_FRAME_ID)
+    frame_name = EEF_FRAME_ID;
+  else if (buttons[controllerMappings.BUTTON_MAP.at("MENU")] && frame_name == BASE_FRAME_ID)
     frame_name = EEF_FRAME_ID;
 }
-
 
 class JoyToServoNode : public rclcpp::Node
 {
 public:
   JoyToServoNode(const rclcpp::NodeOptions& options)
-    : Node("joy_to_twist_publisher", options), frame_to_publish_(BASE_FRAME_ID)
+    : Node("joy_to_twist_publisher", options), frame_to_publish_(EEF_FRAME_ID)
   {
+    // Declare and get the controller type parameter
+    this->declare_parameter<std::string>("controller_type", "xbox");
+    std::string controller_type = this->get_parameter("controller_type").as_string();
+
+    RCLCPP_INFO(this->get_logger(), "Using controller type: %s", controller_type.c_str());
+
+    // Initialize the mappings based on controller type
+    initializeControllerMappings(controller_type);
 
     use_ik = false;
 
@@ -253,10 +239,10 @@ public:
     auto joint_msg = std::make_unique<control_msgs::msg::JointJog>();
 
     // This call updates the frame for twist commands
-    updateCmdFrame(frame_to_publish_, msg->buttons);
+    updateCmdFrame(frame_to_publish_, msg->buttons, controller_map);
 
     // Convert the joystick message to Twist or JointJog and publish
-    if (convertJoyToCmd(msg->axes, msg->buttons, twist_msg, joint_msg, use_ik))
+    if (convertJoyToCmd(msg->axes, msg->buttons, twist_msg, joint_msg, use_ik, controller_map))
     {
       // publish the TwistStamped
       twist_msg->header.frame_id = frame_to_publish_;
@@ -284,9 +270,55 @@ private:
   std::string frame_to_publish_;
 
   std::thread collision_pub_thread_;
+
+  ControllerMappings controller_map;
+
+  void initializeControllerMappings(const std::string& controller_type)
+  {
+      if (controller_type == "xbox")
+      {
+          // Xbox Controller Mapping
+          controller_map.AXIS_DEFAULTS = { { "LEFT_TRIGGER", 1.0 }, { "RIGHT_TRIGGER", 1.0 } };
+
+          controller_map.AXIS_MAP = {
+              { "LEFT_STICK_X", 0 }, { "LEFT_STICK_Y", 1 }, { "LEFT_TRIGGER", 2 },
+              { "RIGHT_STICK_X", 3 }, { "RIGHT_STICK_Y", 4 }, { "RIGHT_TRIGGER", 5 },
+              { "D_PAD_X", 6 }, { "D_PAD_Y", 7 }
+          };
+
+          controller_map.BUTTON_MAP = {
+              { "A", 0 }, { "B", 1 }, { "X", 2 }, { "Y", 3 },
+              { "LEFT_BUMPER", 4 }, { "RIGHT_BUMPER", 5 },
+              { "CHANGE_VIEW", 6 }, { "MENU", 7 },
+              { "HOME", 8 }, { "LEFT_STICK_CLICK", 9 }, { "RIGHT_STICK_CLICK", 10 }
+          };
+      }
+      else if (controller_type == "ps")
+      {
+          // PlayStation Controller Mapping
+          controller_map.AXIS_DEFAULTS = { { "LEFT_TRIGGER", 1.0 }, { "RIGHT_TRIGGER", 1.0 } };
+
+          controller_map.AXIS_MAP = {
+              { "LEFT_STICK_X", 0 }, { "LEFT_STICK_Y", 1 }, { "LEFT_TRIGGER", 2 },
+              { "RIGHT_STICK_X", 3 }, { "RIGHT_STICK_Y", 4 }, { "RIGHT_TRIGGER", 5 },
+              { "D_PAD_X", 6 }, { "D_PAD_Y", 7 }
+          };
+
+          controller_map.BUTTON_MAP = {
+              { "A", 0 }, { "B", 1 }, { "X", 2 }, { "Y", 3 }, // X, CIRCLE, TRIANGLE, SQUARE
+              { "LEFT_BUMPER", 4 }, { "RIGHT_BUMPER", 5 },
+              {"LEFT_TRIGGER", 6}, {"RIGHT_TRIGGER", 7},
+              { "CHANGE_VIEW", 8 }, { "MENU", 9 }, //SHARE, OPTIONS
+              { "HOME", 10 }, { "LEFT_STICK_CLICK", 11 }, { "RIGHT_STICK_CLICK", 12}
+          };
+      }
+      else
+      {
+          RCLCPP_WARN(this->get_logger(), "Unknown controller type. Defaulting to Xbox mapping.");
+          initializeControllerMappings("xbox");  // Default to Xbox
+      }
+  }
 };  // class JoyToServoNode
-
-
 
 int main(int argc, char * argv[]){
   rclcpp::init(argc, argv);

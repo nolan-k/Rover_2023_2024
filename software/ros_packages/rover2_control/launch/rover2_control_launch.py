@@ -83,10 +83,16 @@ def generate_launch_description():
             name='effectors',
             **config
         ),
-        #Node(
-        #    package='rover2_control',
-        #    executable='auton_controller',
-        #    name='auton_controller',
-        #    **config
-        #)
+        Node(
+            package='rover2_control',
+            executable='joint_position_control',
+            name='joint_position',
+            **config
+        )
+        Node(
+            package='rover2_control',
+            executable='auton_controller',
+            name='auton_controller',
+            **config
+        )
     ])

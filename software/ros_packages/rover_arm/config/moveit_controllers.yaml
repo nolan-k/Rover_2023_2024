@@ -18,12 +18,4 @@ moveit_simple_controller_manager:
       - elbow_roll_joint
       - wrist_pitch_joint
       - wrist_roll_joint
- # rover_arm_controller:
- #   default: true
- #   joints:
- #     - base_joint
- #     - shoulder_joint
- #     - elbow_pitch_joint
- #     - elbow_roll_joint
- #     - wrist_pitch_joint
- #     - wrist_roll_joint
+
