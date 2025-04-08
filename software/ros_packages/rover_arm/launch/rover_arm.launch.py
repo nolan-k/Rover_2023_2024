@@ -218,19 +218,40 @@ def generate_launch_description():
         executable="controller_switcher",
     )
 
-    camera_node = Node(
+    d405_node = Node(
         package='realsense2_camera',
         executable='realsense2_camera_node',
-        name='camera',
+        name='d405',
         parameters=[{
-            "depth_width": 424,
-            "depth_height": 240,
-            "depth_fps": 10,
-            "color_width": 424,
-            "color_height": 240,
-            "color_fps": 10,
+            "camera_name": "d405",
+            "depth_width": 1280,
+            "depth_height": 720,
+            "color_width": 1280,
+            "color_height": 720,
             "pointcloud.enable": True,
             "align_depth.enable": True,
+            "serial_no":"_218622273613",
+            "depth_fps": 10,
+            "rgb_fps": 10,
+        }],
+        output='screen'
+    )
+
+    d455_node = Node(
+        package='realsense2_camera',
+        executable='realsense2_camera_node',
+        name='d455',
+        parameters=[{
+            "camera_name": "d455",
+            "depth_width": 1280,
+            "depth_height": 720,
+            "color_width": 1280,
+            "color_height": 720,
+            "pointcloud.enable": True,
+            "align_depth.enable": True,
+            "serial_no":"_318122302525",
+            "depth_fps": 10,
+            "rgb_fps": 10,
         }],
         output='screen'
     )
@@ -250,8 +271,8 @@ def generate_launch_description():
             joy_to_servo_node,
             controller_switcher_node,
             servo_node,
-            camera_node,
-            
+            d405_node,
+            #d455_node,
 
         ]
     )
