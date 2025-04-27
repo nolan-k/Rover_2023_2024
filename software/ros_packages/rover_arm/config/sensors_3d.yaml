@@ -1,13 +1,25 @@
 sensors:
-  - default_sensor
+  - d405_camera
+  - d455_camera
   
-default_sensor:
+d405_camera:
   filtered_cloud_topic: filtered_cloud
   max_range: 0.5
   max_update_rate: 1.0
-  padding_offset: 0.1
+  padding_offset: 0.5
   padding_scale: 1.0
-  point_cloud_topic: /camera/camera/depth/color/points
-  point_subsample: 1
+  point_cloud_topic: /camera/d405/depth/color/points
+  point_subsample: 4
   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
-  frame_id: camera_depth_optical_frame
+  frame_id: d405_depth_optical_frame
+
+d455_camera:
+  filtered_cloud_topic: filtered_cloud2
+  max_range: 6.0
+  max_update_rate: 1.0
+  padding_offset: 0.5
+  padding_scale: 1.0
+  point_cloud_topic: /camera/d455/depth/color/points
+  point_subsample: 4
+  sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+  frame_id: d455_depth_optical_frame
