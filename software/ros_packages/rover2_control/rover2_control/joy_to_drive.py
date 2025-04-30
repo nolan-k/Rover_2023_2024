@@ -17,7 +17,7 @@ class JoyToVelocityNode(Node):
         # Subscriber to joy topic
         self.joy_sub = self.create_subscription(
             Joy,
-            '/joy',  # Topic where joy messages are published
+            '/joy_can_drive',  # Topic where joy messages are published
             self.joy_callback,
             10
         )

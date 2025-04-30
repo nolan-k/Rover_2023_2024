@@ -80,7 +80,8 @@ def generate_launch_description():
     joy_node = Node(
         package="joy",
         executable="joy_node",
-        name="joy_node"
+        name="joy_node",
+        remappings=[('/joy', 'joy_can_drive')]
     )
 
     # Joy Node to convert joystick input to velocities
