@@ -49,61 +49,68 @@ def generate_launch_description():
         "odrive_drive_ros2_control.yaml",
     )
 
+    #ros2_control_node Likely missing rover_description
     ros2_control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[drive_ros2_controllers_path],
 
     )
+    # ros2_control Node
+    ros2_control_node_2 = Node(
+        package='controller_manager',
+        executable='ros2_control_node',
+        parameters=[{'robot_description': Command([
+            FindExecutable(name='xacro'), ' ', urdf_path
+        ])}, controller_config],
+        output='screen'
+    )
 
+    # Robot State Publisher
+    robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': Command([
+            FindExecutable(name='xacro'), ' ', urdf_path
+        ])}]
+    )
     
+    joy_node = Node(
+        package="joy",
+        executable="joy_node",
+        name="joy_node"
+    )
+
+    # Joy Node to convert joystick input to velocities
+    joy_to_drive_node = Node(
+        package='rover2_control',  # Replace with your package name
+        executable='joy_to_drive',  # This is the node you created above
+        name='joy_to_drive',
+        output='screen'
+    )
+
+    # Load joint_state_broadcaster after ros2_control_node is up
+    joint_state_broadcaster_node = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
+        output='screen'
+    )
+    can_controller_node = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['can_controller', "-c", "/controller_manager"],
+        output='screen'
+    )
 
     return LaunchDescription([
-        # Robot State Publisher
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            name='robot_state_publisher',
-            output='screen',
-            parameters=[{'robot_description': Command([
-                FindExecutable(name='xacro'), ' ', urdf_path
-            ])}]
-        ),
-        Node(
-            package="joy",
-            executable="joy_node",
-            name="joy_node"
-        ),
-
-        # ros2_control Node
-        Node(
-            package='controller_manager',
-            executable='ros2_control_node',
-            parameters=[{'robot_description': Command([
-                FindExecutable(name='xacro'), ' ', urdf_path
-            ])}, controller_config],
-            output='screen'
-        ),
-	ros2_control_node,
-        # Joy Node to convert joystick input to velocities
-        Node(
-            package='rover2_control',  # Replace with your package name
-            executable='joy_to_drive',  # This is the node you created above
-            name='joy_to_drive',
-            output='screen'
-        ),
-
-        # Load joint_state_broadcaster after ros2_control_node is up
-	Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['joint_state_broadcaster'],
-            output='screen'
-        ),
-        Node(
-            package='controller_manager',
-            executable='spawner',
-            arguments=['can_controller', "-c", "/controller_manager"],
-            output='screen'
-        )
+        ros2_control_node_2,
+        ros2_control_node,
+        robot_state_publisher,
+        joy_node,
+        joy_to_drive_node,
+        joint_state_broadcaster_node,
+        can_controller_node,       
     ])
