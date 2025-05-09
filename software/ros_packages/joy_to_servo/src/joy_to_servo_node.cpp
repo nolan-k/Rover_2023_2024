@@ -167,7 +167,7 @@ public:
     // Initialize the mappings based on controller type
     initializeControllerMappings(controller_type);
 
-    use_ik = false;
+    use_ik = true;
 
     // Setup pub/sub
     joy_sub_ = this->create_subscription<sensor_msgs::msg::Joy>(
