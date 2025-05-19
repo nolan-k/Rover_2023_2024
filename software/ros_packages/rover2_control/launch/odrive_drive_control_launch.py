@@ -56,10 +56,16 @@ def generate_launch_description():
 
     )
 
+    config = {
+        'emulate_tty': True,
+        'output': 'screen',
+        'respawn': True
+    }
     
 
     return LaunchDescription([
         # Robot State Publisher
+        
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -69,12 +75,6 @@ def generate_launch_description():
                 FindExecutable(name='xacro'), ' ', urdf_path
             ])}]
         ),
-        Node(
-            package="joy",
-            executable="joy_node",
-            name="joy_node"
-        ),
-
         # ros2_control Node
         Node(
             package='controller_manager',
@@ -85,19 +85,32 @@ def generate_launch_description():
             output='screen'
         ),
 	ros2_control_node,
+        
         # Joy Node to convert joystick input to velocities
+
         Node(
             package='rover2_control',  # Replace with your package name
             executable='joy_to_drive',  # This is the node you created above
             name='joy_to_drive',
             output='screen'
         ),
-
+        # IRIS controller
+        Node(
+            package='rover2_control',
+            executable='iris_controller',
+            name='iris_controller',
+            parameters=[{
+                '~port': '/dev/rover/ttyIRIS',
+                '~hertz': 20
+            }],
+            **config
+        ),
         # Load joint_state_broadcaster after ros2_control_node is up
+
 	Node(
             package='controller_manager',
             executable='spawner',
-            arguments=['joint_state_broadcaster'],
+            arguments=['drive_state_broadcaster'],
             output='screen'
         ),
         Node(
@@ -105,5 +118,31 @@ def generate_launch_description():
             executable='spawner',
             arguments=['can_controller', "-c", "/controller_manager"],
             output='screen'
-        )
+        ),
+
+        Node(
+            package='rover2_control',
+            executable='chassis_pan_tilt_control',
+            name='chassis_pan_tilt',
+            **config
+        ),
+        Node(
+            package='rover2_control',
+            executable='tower_pan_tilt_control',
+            name='tower_pan_tilt',
+            **config
+        ),
+#        Node(
+#            package='rover2_control',
+#            executable='effectors_control',
+#            name='effectors',
+#            **config
+#        ),
+#        Node(
+#            package='rover2_control',
+#            executable='joint_position_control',
+#            name='joint_position',
+#            **config
+#        ),
+
     ])

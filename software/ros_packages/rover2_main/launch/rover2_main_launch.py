@@ -9,7 +9,7 @@ def generate_launch_description():
    drive_control = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([os.path.join(
          get_package_share_directory('rover2_control')),
-         '/rover2_control_launch.py'])
+         '/odrive_drive_control_launch.py'])
       )
    cameras = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([os.path.join(
@@ -43,6 +43,6 @@ def generate_launch_description():
       cameras,
       bridge,
       imu,
-      arm,
+   #   arm,
       #      status
    ])

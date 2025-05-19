@@ -1,660 +1,335 @@
-[INFO] [launch]: All log files can be found below /home/makemorerobot/.ros/log/2025-01-11-15-50-43-032048-ubuntu-55360
+[INFO] [launch]: All log files can be found below /home/makemorerobot/.ros/log/2025-05-05-16-50-02-420778-ubuntu-6618
 [INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [iris_controller-1]: process started with pid [55373]
-[INFO] [drive_control-2]: process started with pid [55375]
-[INFO] [drive_control-3]: process started with pid [55377]
-[INFO] [drive_control-4]: process started with pid [55379]
-[INFO] [drive_coordinator-5]: process started with pid [55381]
-[INFO] [chassis_pan_tilt_control-6]: process started with pid [55383]
-[INFO] [tower_pan_tilt_control-7]: process started with pid [55385]
-[INFO] [effectors_control-8]: process started with pid [55387]
-[INFO] [rover_camera-9]: process started with pid [55389]
-[INFO] [rover_camera-10]: process started with pid [55391]
-[INFO] [rover_camera-11]: process started with pid [55393]
-[INFO] [rover_camera-12]: process started with pid [55395]
-[INFO] [rosbridge_websocket-13]: process started with pid [55397]
-[INFO] [rosapi_node-14]: process started with pid [55399]
-[INFO] [rviz2-15]: process started with pid [55401]
-[INFO] [ros2_control_node-16]: process started with pid [55403]
-[INFO] [spawner-17]: process started with pid [55405]
-[INFO] [spawner-18]: process started with pid [55407]
-[INFO] [servo_node_main-19]: process started with pid [55409]
-[INFO] [joy_to_servo_node-20]: process started with pid [55411]
-[INFO] [component_container_mt-21]: process started with pid [55415]
-[drive_control-2] Traceback (most recent call last):
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-2]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-2]     return next(matches).load()
-[drive_control-2]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-2]     module = import_module(match.group('module'))
-[drive_control-2]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-2]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-2]     import minimalmodbus
-[drive_control-2] ModuleNotFoundError: No module named 'minimalmodbus'
-[ros2_control_node-16] [WARN] [1736639445.770531831] [controller_manager]: [Deprecated] Passing the robot description parameter directly to the control_manager node is deprecated. Use '~/robot_description' topic from 'robot_state_publisher' instead.
-[ros2_control_node-16] [INFO] [1736639445.773377676] [resource_manager]: Loading hardware 'RealSystem' 
-[ros2_control_node-16] [INFO] [1736639445.864329566] [resource_manager]: Initialize hardware 'RealSystem' 
-[ros2_control_node-16] [INFO] [1736639445.893452235] [resource_manager]: Successful initialization of hardware 'RealSystem'
-[ros2_control_node-16] [INFO] [1736639445.915560100] [resource_manager]: 'configure' hardware 'RealSystem' 
-[ros2_control_node-16] [ERROR] [1736639445.917501599] [ODriveHardwareInterface]: Failed to initialize SocketCAN on can0
-[ros2_control_node-16] [INFO] [1736639445.918632769] [resource_manager]: Failed to 'configure' hardware 'RealSystem'
-[ros2_control_node-16] terminate called after throwing an instance of 'std::runtime_error'
-[ros2_control_node-16]   what():  Failed to set the initial state of the component : RealSystem to active
-[ros2_control_node-16] Stack trace (most recent call last):
-[ERROR] [drive_control-2]: process has died [pid 55375, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=rear_bogie --params-file /tmp/launch_params_0btopoju'].
-[INFO] [drive_control-2]: process started with pid [55485]
-[ros2_control_node-16] #13   Object "/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1", at 0xffffffffffffffff, in 
-[servo_node_main-19] [WARN] [1736639446.357856674] [moveit_servo.servo_node]: Intra-process communication is disabled, consider enabling it by adding: 
-[servo_node_main-19] extra_arguments=[{'use_intra_process_comms' : True}]
-[servo_node_main-19] to the Servo composable node in the launch file
-[ros2_control_node-16] #12   Object "/opt/ros/humble/lib/controller_manager/ros2_control_node", at 0xaaaacb5b476f, in 
-[servo_node_main-19] [INFO] [1736639446.549074364] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.0171875 seconds
-[servo_node_main-19] [INFO] [1736639446.550980181] [moveit_robot_model.robot_model]: Loading robot model 'rover_arm'...
-[drive_control-3] Traceback (most recent call last):
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-3]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-3]     return next(matches).load()
-[drive_control-3]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-3]     module = import_module(match.group('module'))
-[drive_control-3]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-3]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-3]     import minimalmodbus
-[drive_control-3] ModuleNotFoundError: No module named 'minimalmodbus'
-[ros2_control_node-16] #11   Source "../csu/libc-start.c", line 392, in __libc_start_main_impl [0xffffab9274cb]
-[ros2_control_node-16] #10   Source "../sysdeps/nptl/libc_start_call_main.h", line 58, in __aarch64_ldadd4_acq [0xffffab9273fb]
-[ros2_control_node-16] #9    Object "/opt/ros/humble/lib/controller_manager/ros2_control_node", at 0xaaaacb5b3d17, in 
-[ros2_control_node-16] #8    Object "/opt/ros/humble/lib/libcontroller_manager.so", at 0xffffac002863, in controller_manager::ControllerManager::ControllerManager(std::shared_ptr<rclcpp::Executor>, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, rclcpp::NodeOptions const&)
-[ros2_control_node-16] #7    Object "/opt/ros/humble/lib/libcontroller_manager.so", at 0xffffabfff12b, in controller_manager::ControllerManager::init_resource_manager(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
-[ros2_control_node-16] #6    Object "/usr/lib/aarch64-linux-gnu/libstdc++.so.6.0.30", at 0xffffabb82e03, in __cxa_throw
-[ros2_control_node-16] #5    Object "/usr/lib/aarch64-linux-gnu/libstdc++.so.6.0.30", at 0xffffabb82b1f, in std::terminate()
-[ros2_control_node-16] #4    Object "/usr/lib/aarch64-linux-gnu/libstdc++.so.6.0.30", at 0xffffabb82abb, in 
-[ros2_control_node-16] #3    Object "/usr/lib/aarch64-linux-gnu/libstdc++.so.6.0.30", at 0xffffabb862db, in __gnu_cxx::__verbose_terminate_handler()
-[ros2_control_node-16] #2    Source "./stdlib/abort.c", line 79, in abort [0xffffab92712f]
-[ros2_control_node-16] #1    Source "../sysdeps/posix/raise.c", line 26, in raise [0xffffab93a67b]
-[ros2_control_node-16] #0    Source "./nptl/pthread_kill.c", line 44, in __pthread_kill_implementation [0xffffab97f200]
-[ros2_control_node-16] Aborted (Signal sent by tkill() 55403 1000)
-[tower_pan_tilt_control-7] Traceback (most recent call last):
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 33, in <module>
-[tower_pan_tilt_control-7]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'tower_pan_tilt_control')())
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 25, in importlib_load_entry_point
-[tower_pan_tilt_control-7]     return next(matches).load()
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[tower_pan_tilt_control-7]     module = import_module(match.group('module'))
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[tower_pan_tilt_control-7]     return _bootstrap._gcd_import(name[level:], package, level)
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/tower_pan_tilt_control.py", line 11, in <module>
-[tower_pan_tilt_control-7]     import minimalmodbus
-[tower_pan_tilt_control-7] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [drive_control-3]: process has died [pid 55377, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=left_bogie --params-file /tmp/launch_params_u04se67w'].
-[INFO] [drive_control-3]: process started with pid [55544]
-[rover_camera-11] [ WARN:0@2.580] global cap.cpp:204 open VIDEOIO(V4L2): backend is generally available but can't be used to capture by name
-[rover_camera-11] [0m[INFO] [1736639448.345299758] [infrared]: Connecting to USB camera with path: /dev/rover/camera_infrared[0m
-[drive_control-4] Traceback (most recent call last):
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-4]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-4]     return next(matches).load()
-[drive_control-4]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-4]     module = import_module(match.group('module'))
-[drive_control-4]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-4]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-4]     import minimalmodbus
-[drive_control-4] ModuleNotFoundError: No module named 'minimalmodbus'
-[rover_camera-9] [ WARN:0@2.700] global cap.cpp:204 open VIDEOIO(V4L2): backend is generally available but can't be used to capture by name
-[rover_camera-9] [0m[INFO] [1736639448.920875658] [navigation]: Connecting to USB camera with path: /dev/rover/camera_main_navigation[0m
-[rover_camera-11] [0m[INFO] [1736639449.088974760] [infrared]: Failed to open capture for /dev/rover/camera_infrared[0m
-[chassis_pan_tilt_control-6] Traceback (most recent call last):
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 33, in <module>
-[chassis_pan_tilt_control-6]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'chassis_pan_tilt_control')())
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 25, in importlib_load_entry_point
-[chassis_pan_tilt_control-6]     return next(matches).load()
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[chassis_pan_tilt_control-6]     module = import_module(match.group('module'))
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[chassis_pan_tilt_control-6]     return _bootstrap._gcd_import(name[level:], package, level)
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/chassis_pan_tilt_control.py", line 13, in <module>
-[chassis_pan_tilt_control-6]     import minimalmodbus
-[chassis_pan_tilt_control-6] ModuleNotFoundError: No module named 'minimalmodbus'
-[rover_camera-9] [0m[INFO] [1736639449.549568287] [navigation]: Failed to open capture for /dev/rover/camera_main_navigation[0m
-[ERROR] [tower_pan_tilt_control-7]: process has died [pid 55385, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control --ros-args -r __node:=tower_pan_tilt'].
-[rover_camera-10] [ WARN:0@2.545] global cap.cpp:204 open VIDEOIO(V4L2): backend is generally available but can't be used to capture by name
-[rover_camera-10] [0m[INFO] [1736639449.722743541] [chassis]: Connecting to USB camera with path: /dev/rover/camera_chassis[0m
-[INFO] [tower_pan_tilt_control-7]: process started with pid [55574]
-[iris_controller-1] Traceback (most recent call last):
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 33, in <module>
-[iris_controller-1]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'iris_controller')())
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 25, in importlib_load_entry_point
-[iris_controller-1]     return next(matches).load()
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[iris_controller-1]     module = import_module(match.group('module'))
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[iris_controller-1]     return _bootstrap._gcd_import(name[level:], package, level)
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/iris_controller.py", line 12, in <module>
-[iris_controller-1]     import minimalmodbus
-[iris_controller-1] ModuleNotFoundError: No module named 'minimalmodbus'
-[component_container_mt-21] [INFO] [1736639450.200644401] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/librobot_state_publisher_node.so
-[component_container_mt-21] [INFO] [1736639450.208302903] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<robot_state_publisher::RobotStatePublisher>
-[component_container_mt-21] [INFO] [1736639450.209777956] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<robot_state_publisher::RobotStatePublisher>
-[rover_camera-10] [0m[INFO] [1736639450.441754143] [chassis]: Failed to open capture for /dev/rover/camera_chassis[0m
-[effectors_control-8] Traceback (most recent call last):
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 33, in <module>
-[effectors_control-8]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'effectors_control')())
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 25, in importlib_load_entry_point
-[effectors_control-8]     return next(matches).load()
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[effectors_control-8]     module = import_module(match.group('module'))
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[effectors_control-8]     return _bootstrap._gcd_import(name[level:], package, level)
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/effectors_control.py", line 12, in <module>
-[effectors_control-8]     import minimalmodbus
-[effectors_control-8] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [drive_control-4]: process has died [pid 55379, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=right_bogie --params-file /tmp/launch_params_bv4zkkki'].
-[INFO] [drive_control-4]: process started with pid [55579]
-[servo_node_main-19] [INFO] [1736639450.811042073] [moveit_ros.current_state_monitor]: Listening to joint states on topic '/joint_states'
-[servo_node_main-19] [INFO] [1736639450.919206476] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
-[servo_node_main-19] [INFO] [1736639450.919280014] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
-[servo_node_main-19] [INFO] [1736639451.076601317] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/planning_scene'
-[servo_node_main-19] [INFO] [1736639451.076687272] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
-[servo_node_main-19] [INFO] [1736639451.092002836] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'collision_object'
-[servo_node_main-19] [INFO] [1736639451.208150901] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
-[servo_node_main-19] [WARN] [1736639451.208778024] [moveit.ros.occupancy_map_monitor.middleware_handle]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
-[servo_node_main-19] [ERROR] [1736639451.208818569] [moveit.ros.occupancy_map_monitor.middleware_handle]: No 3D sensor plugin(s) defined for octomap updates
-[servo_node_main-19] [INFO] [1736639451.387972047] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Publishing maintained planning scene on '/servo_node/publish_planning_scene'
-[ERROR] [chassis_pan_tilt_control-6]: process has died [pid 55383, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control --ros-args -r __node:=chassis_pan_tilt'].
-[INFO] [chassis_pan_tilt_control-6]: process started with pid [55582]
-[ERROR] [iris_controller-1]: process has died [pid 55373, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller --ros-args -r __node:=iris_controller --params-file /tmp/launch_params_b_1akfn7'].
-[INFO] [iris_controller-1]: process started with pid [55584]
-[ERROR] [effectors_control-8]: process has died [pid 55387, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control --ros-args -r __node:=effectors'].
-[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/robot_state_publisher' in container '/moveit_servo_demo_container'
-[component_container_mt-21] [INFO] [1736639452.273502776] [robot_state_publisher]: got segment arm_gripper
-[component_container_mt-21] [INFO] [1736639452.273620476] [robot_state_publisher]: got segment arm_link_0
-[component_container_mt-21] [INFO] [1736639452.273635420] [robot_state_publisher]: got segment arm_link_1
-[component_container_mt-21] [INFO] [1736639452.273644220] [robot_state_publisher]: got segment arm_link_2
-[component_container_mt-21] [INFO] [1736639452.273651549] [robot_state_publisher]: got segment arm_link_3
-[component_container_mt-21] [INFO] [1736639452.273658301] [robot_state_publisher]: got segment arm_link_4
-[component_container_mt-21] [INFO] [1736639452.273664413] [robot_state_publisher]: got segment base_link
-[INFO] [effectors_control-8]: process started with pid [55586]
-[component_container_mt-21] [INFO] [1736639452.404034792] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/libstatic_transform_broadcaster_node.so
-[component_container_mt-21] [INFO] [1736639452.404713117] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<tf2_ros::StaticTransformBroadcasterNode>
-[component_container_mt-21] [INFO] [1736639452.404774719] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<tf2_ros::StaticTransformBroadcasterNode>
+[INFO] [rviz2-1]: process started with pid [6648]
+[INFO] [component_container_mt-2]: process started with pid [6650]
+[INFO] [move_group-3]: process started with pid [6652]
+[INFO] [ros2_control_node-4]: process started with pid [6654]
+[INFO] [spawner-5]: process started with pid [6656]
+[INFO] [spawner-6]: process started with pid [6658]
+[INFO] [spawner-7]: process started with pid [6660]
+[INFO] [joy_to_servo_node-8]: process started with pid [6662]
+[INFO] [controller_switcher-9]: process started with pid [6678]
+[INFO] [servo_node_main-10]: process started with pid [6691]
+[INFO] [realsense2_camera_node-11]: process started with pid [6701]
+[component_container_mt-2] [INFO] [1746489003.127876232] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/libstatic_transform_broadcaster_node.so
+[ros2_control_node-4] [INFO] [1746489003.126327528] [controller_manager]: Subscribing to '~/robot_description' topic for robot description file.
+[component_container_mt-2] [INFO] [1746489003.139917608] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<tf2_ros::StaticTransformBroadcasterNode>
+[component_container_mt-2] [INFO] [1746489003.140041928] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<tf2_ros::StaticTransformBroadcasterNode>
+[ros2_control_node-4] [INFO] [1746489003.141223208] [controller_manager]: update rate is 100 Hz
+[ros2_control_node-4] [INFO] [1746489003.141307720] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-4] [WARN] [1746489003.152009320] [controller_manager]: No real-time kernel detected on this system. See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[joy_to_servo_node-8] [INFO] [1746489003.190533672] [joy_to_twist_publisher]: Using controller type: xbox
 [INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/static_tf2_broadcaster' in container '/moveit_servo_demo_container'
-[component_container_mt-21] [INFO] [1736639453.087303696] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/libjoy.so
-[component_container_mt-21] [INFO] [1736639453.289550760] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<joy::Joy>
-[component_container_mt-21] [INFO] [1736639453.297456245] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<joy::Joy>
+[component_container_mt-2] [INFO] [1746489003.206502408] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/librobot_state_publisher_node.so
+[component_container_mt-2] [INFO] [1746489003.209990248] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<robot_state_publisher::RobotStatePublisher>
+[component_container_mt-2] [INFO] [1746489003.210118184] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<robot_state_publisher::RobotStatePublisher>
+[component_container_mt-2] [INFO] [1746489003.238012776] [robot_state_publisher]: got segment arm_gripper
+[component_container_mt-2] [INFO] [1746489003.238158408] [robot_state_publisher]: got segment arm_link_0
+[component_container_mt-2] [INFO] [1746489003.238176392] [robot_state_publisher]: got segment arm_link_1
+[component_container_mt-2] [INFO] [1746489003.238186120] [robot_state_publisher]: got segment arm_link_2
+[component_container_mt-2] [INFO] [1746489003.238194568] [robot_state_publisher]: got segment arm_link_3
+[component_container_mt-2] [INFO] [1746489003.238202472] [robot_state_publisher]: got segment arm_link_4
+[component_container_mt-2] [INFO] [1746489003.238212936] [robot_state_publisher]: got segment base_link
+[component_container_mt-2] [INFO] [1746489003.238221000] [robot_state_publisher]: got segment d405_bottom_screw_frame
+[component_container_mt-2] [INFO] [1746489003.238229640] [robot_state_publisher]: got segment d405_color_frame
+[component_container_mt-2] [INFO] [1746489003.238238216] [robot_state_publisher]: got segment d405_color_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238246248] [robot_state_publisher]: got segment d405_depth_frame
+[component_container_mt-2] [INFO] [1746489003.238254216] [robot_state_publisher]: got segment d405_depth_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238262184] [robot_state_publisher]: got segment d405_infra1_frame
+[component_container_mt-2] [INFO] [1746489003.238270344] [robot_state_publisher]: got segment d405_infra1_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238278600] [robot_state_publisher]: got segment d405_infra2_frame
+[component_container_mt-2] [INFO] [1746489003.238286728] [robot_state_publisher]: got segment d405_infra2_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238294568] [robot_state_publisher]: got segment d405_link
+[component_container_mt-2] [INFO] [1746489003.238302472] [robot_state_publisher]: got segment d455_accel_frame
+[component_container_mt-2] [INFO] [1746489003.238310216] [robot_state_publisher]: got segment d455_accel_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238318184] [robot_state_publisher]: got segment d455_bottom_screw_frame
+[component_container_mt-2] [INFO] [1746489003.238326248] [robot_state_publisher]: got segment d455_color_frame
+[component_container_mt-2] [INFO] [1746489003.238334184] [robot_state_publisher]: got segment d455_color_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238342440] [robot_state_publisher]: got segment d455_depth_frame
+[component_container_mt-2] [INFO] [1746489003.238350344] [robot_state_publisher]: got segment d455_depth_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238358056] [robot_state_publisher]: got segment d455_gyro_frame
+[component_container_mt-2] [INFO] [1746489003.238366152] [robot_state_publisher]: got segment d455_gyro_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238373864] [robot_state_publisher]: got segment d455_imu_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238381832] [robot_state_publisher]: got segment d455_infra1_frame
+[component_container_mt-2] [INFO] [1746489003.238389928] [robot_state_publisher]: got segment d455_infra1_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238397608] [robot_state_publisher]: got segment d455_infra2_frame
+[component_container_mt-2] [INFO] [1746489003.238405672] [robot_state_publisher]: got segment d455_infra2_optical_frame
+[component_container_mt-2] [INFO] [1746489003.238413416] [robot_state_publisher]: got segment d455_link
+[ros2_control_node-4] [INFO] [1746489003.238932168] [controller_manager]: Received robot description file.
+[ros2_control_node-4] [INFO] [1746489003.239415656] [resource_manager]: Loading hardware 'RealSystem' 
+[ros2_control_node-4] [INFO] [1746489003.240908200] [resource_manager]: Initialize hardware 'RealSystem' 
+[ros2_control_node-4] [INFO] [1746489003.241485640] [resource_manager]: Successful initialization of hardware 'RealSystem'
+[ros2_control_node-4] [INFO] [1746489003.241867752] [resource_manager]: 'configure' hardware 'RealSystem' 
+[ros2_control_node-4] [INFO] [1746489003.242102504] [ODriveHardwareInterface]: Initialized SocketCAN on can1
+[ros2_control_node-4] [INFO] [1746489003.242126984] [resource_manager]: Successful 'configure' of hardware 'RealSystem'
+[ros2_control_node-4] [INFO] [1746489003.242146312] [resource_manager]: 'activate' hardware 'RealSystem' 
+[ros2_control_node-4] [INFO] [1746489003.242154472] [ODriveHardwareInterface]: activating ODrives...
+[ros2_control_node-4] [INFO] [1746489003.242162248] [resource_manager]: Successful 'activate' of hardware 'RealSystem'
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/robot_state_publisher' in container '/moveit_servo_demo_container'
+[component_container_mt-2] [INFO] [1746489003.265510504] [moveit_servo_demo_container]: Load Library: /opt/ros/humble/lib/libjoy.so
+[controller_switcher-9] [INFO] [1746489003.269713384] [controller_switcher]: Controller switcher initialized.
+[controller_switcher-9] [INFO] [1746489003.269938120] [controller_switcher]: Listening for home button press on button index: 8
+[controller_switcher-9] [INFO] [1746489003.269963752] [controller_switcher]: Currently active controller: rover_arm_controller
+[component_container_mt-2] [INFO] [1746489003.290363976] [moveit_servo_demo_container]: Found class: rclcpp_components::NodeFactoryTemplate<joy::Joy>
+[component_container_mt-2] [INFO] [1746489003.291900136] [moveit_servo_demo_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<joy::Joy>
+[move_group-3] [INFO] [1746489003.297457480] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.005008 seconds
+[move_group-3] [INFO] [1746489003.297722504] [moveit_robot_model.robot_model]: Loading robot model 'rover_arm'...
+[servo_node_main-10] [WARN] [1746489003.349562760] [moveit_servo.servo_node]: Intra-process communication is disabled, consider enabling it by adding: 
+[servo_node_main-10] extra_arguments=[{'use_intra_process_comms' : True}]
+[servo_node_main-10] to the Servo composable node in the launch file
+[servo_node_main-10] [INFO] [1746489003.370576776] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.00449325 seconds
+[servo_node_main-10] [INFO] [1746489003.372002472] [moveit_robot_model.robot_model]: Loading robot model 'rover_arm'...
+[move_group-3] [INFO] [1746489003.424773480] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[move_group-3] [INFO] [1746489003.425131752] [moveit.ros_planning_interface.moveit_cpp]: Listening to 'joint_states' for joint states
+[move_group-3] [INFO] [1746489003.428600296] [moveit_ros.current_state_monitor]: Listening to joint states on topic 'joint_states'
+[move_group-3] [INFO] [1746489003.431784840] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[move_group-3] [INFO] [1746489003.431852040] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[move_group-3] [INFO] [1746489003.433743208] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/planning_scene'
+[move_group-3] [INFO] [1746489003.433805608] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[move_group-3] [INFO] [1746489003.435801576] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'collision_object'
+[move_group-3] [INFO] [1746489003.437434824] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[move_group-3] [ERROR] [1746489003.438878824] [moveit.ros.occupancy_map_monitor.middleware_handle]: Exception while loading octomap updater 'occupancy_map_monitor/PointCloudOctomapUpdater': According to the loaded plugin descriptions the class occupancy_map_monitor/PointCloudOctomapUpdater with base class type occupancy_map_monitor::OccupancyMapUpdater does not exist. Declared types are 
+[move_group-3] 
+[move_group-3] [ERROR] [1746489003.438935656] [moveit.ros.occupancy_map_monitor]: Failed to load sensor: `d405_camera` of type: `occupancy_map_monitor/PointCloudOctomapUpdater`
+[move_group-3] [ERROR] [1746489003.438963976] [moveit.ros.occupancy_map_monitor.middleware_handle]: Exception while loading octomap updater 'occupancy_map_monitor/PointCloudOctomapUpdater': According to the loaded plugin descriptions the class occupancy_map_monitor/PointCloudOctomapUpdater with base class type occupancy_map_monitor::OccupancyMapUpdater does not exist. Declared types are 
+[move_group-3] 
+[move_group-3] [ERROR] [1746489003.438974824] [moveit.ros.occupancy_map_monitor]: Failed to load sensor: `d455_camera` of type: `occupancy_map_monitor/PointCloudOctomapUpdater`
+[move_group-3] [INFO] [1746489003.450634056] [moveit.ros_planning_interface.moveit_cpp]: Loading planning pipeline 'ompl'
+[move_group-3] [INFO] [1746489003.494082888] [moveit.ros_planning.planning_pipeline]: Using planning interface 'OMPL'
+[move_group-3] [INFO] [1746489003.498803304] [moveit_ros.add_time_optimal_parameterization]: Param 'ompl.path_tolerance' was not set. Using default value: 0.100000
+[move_group-3] [INFO] [1746489003.498877992] [moveit_ros.add_time_optimal_parameterization]: Param 'ompl.resample_dt' was not set. Using default value: 0.100000
+[move_group-3] [INFO] [1746489003.498888552] [moveit_ros.add_time_optimal_parameterization]: Param 'ompl.min_angle_change' was not set. Using default value: 0.001000
+[move_group-3] [INFO] [1746489003.498933448] [moveit_ros.fix_workspace_bounds]: Param 'ompl.default_workspace_bounds' was not set. Using default value: 10.000000
+[move_group-3] [INFO] [1746489003.498962536] [moveit_ros.fix_start_state_bounds]: Param 'ompl.start_state_max_bounds_error' was set to 0.100000
+[move_group-3] [INFO] [1746489003.498972744] [moveit_ros.fix_start_state_bounds]: Param 'ompl.start_state_max_dt' was not set. Using default value: 0.500000
+[move_group-3] [INFO] [1746489003.498991944] [moveit_ros.fix_start_state_collision]: Param 'ompl.start_state_max_dt' was not set. Using default value: 0.500000
+[move_group-3] [INFO] [1746489003.499001544] [moveit_ros.fix_start_state_collision]: Param 'ompl.jiggle_fraction' was set to 0.050000
+[move_group-3] [INFO] [1746489003.499012232] [moveit_ros.fix_start_state_collision]: Param 'ompl.max_sampling_attempts' was not set. Using default value: 100
+[move_group-3] [INFO] [1746489003.499031720] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Add Time Optimal Parameterization'
+[move_group-3] [INFO] [1746489003.499191048] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Resolve constraint frames to robot links'
+[move_group-3] [INFO] [1746489003.499204584] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Workspace Bounds'
+[move_group-3] [INFO] [1746489003.499211048] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State Bounds'
+[move_group-3] [INFO] [1746489003.499216296] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State In Collision'
+[move_group-3] [INFO] [1746489003.499221672] [moveit.ros_planning.planning_pipeline]: Using planning request adapter 'Fix Start State Path Constraints'
+[move_group-3] [INFO] [1746489003.504411240] [moveit.ros_planning_interface.moveit_cpp]: Loading planning pipeline 'pilz_industrial_motion_planner'
+[move_group-3] [INFO] [1746489003.509885896] [moveit.pilz_industrial_motion_planner.joint_limits_aggregator]: Reading limits from namespace robot_description_planning
+[move_group-3] [INFO] [1746489003.533153864] [moveit.pilz_industrial_motion_planner]: Available plugins: pilz_industrial_motion_planner/PlanningContextLoaderCIRC pilz_industrial_motion_planner/PlanningContextLoaderLIN pilz_industrial_motion_planner/PlanningContextLoaderPTP 
+[move_group-3] [INFO] [1746489003.533274408] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderCIRC
+[move_group-3] [INFO] [1746489003.535663688] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [CIRC]
+[move_group-3] [INFO] [1746489003.535709128] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderLIN
+[move_group-3] [INFO] [1746489003.537052072] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [LIN]
+[move_group-3] [INFO] [1746489003.537077128] [moveit.pilz_industrial_motion_planner]: About to load: pilz_industrial_motion_planner/PlanningContextLoaderPTP
+[move_group-3] [INFO] [1746489003.538437896] [moveit.pilz_industrial_motion_planner]: Registered Algorithm [PTP]
+[move_group-3] [INFO] [1746489003.538474984] [moveit.ros_planning.planning_pipeline]: Using planning interface 'Pilz Industrial Motion Planner'
 [INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/joy_node' in container '/moveit_servo_demo_container'
-[ERROR] [ros2_control_node-16]: process has died [pid 55403, exit code -6, cmd '/opt/ros/humble/lib/controller_manager/ros2_control_node --ros-args --params-file /tmp/launch_params_tvugjzpy --params-file /home/makemorerobot/Rover_2023_2024/software/install/rover_arm/share/rover_arm/config/ros2_controllers.yaml'].
-[drive_control-2] Traceback (most recent call last):
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-2]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-2]     return next(matches).load()
-[drive_control-2]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-2]     module = import_module(match.group('module'))
-[drive_control-2]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-2]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-2]     import minimalmodbus
-[drive_control-2] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [drive_control-2]: process has died [pid 55485, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=rear_bogie --params-file /tmp/launch_params_0btopoju'].
-[INFO] [drive_control-2]: process started with pid [55603]
-[chassis_pan_tilt_control-6] Traceback (most recent call last):
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 33, in <module>
-[chassis_pan_tilt_control-6]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'chassis_pan_tilt_control')())
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 25, in importlib_load_entry_point
-[chassis_pan_tilt_control-6]     return next(matches).load()
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[chassis_pan_tilt_control-6]     module = import_module(match.group('module'))
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[chassis_pan_tilt_control-6]     return _bootstrap._gcd_import(name[level:], package, level)
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/chassis_pan_tilt_control.py", line 13, in <module>
-[chassis_pan_tilt_control-6]     import minimalmodbus
-[chassis_pan_tilt_control-6] ModuleNotFoundError: No module named 'minimalmodbus'
-[tower_pan_tilt_control-7] Traceback (most recent call last):
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 33, in <module>
-[tower_pan_tilt_control-7]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'tower_pan_tilt_control')())
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 25, in importlib_load_entry_point
-[tower_pan_tilt_control-7]     return next(matches).load()
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[tower_pan_tilt_control-7]     module = import_module(match.group('module'))
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[tower_pan_tilt_control-7]     return _bootstrap._gcd_import(name[level:], package, level)
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/tower_pan_tilt_control.py", line 11, in <module>
-[tower_pan_tilt_control-7]     import minimalmodbus
-[tower_pan_tilt_control-7] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [chassis_pan_tilt_control-6]: process has died [pid 55582, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control --ros-args -r __node:=chassis_pan_tilt'].
-[INFO] [chassis_pan_tilt_control-6]: process started with pid [55629]
-[drive_control-3] Traceback (most recent call last):
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-3]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-3]     return next(matches).load()
-[drive_control-3]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-3]     module = import_module(match.group('module'))
-[drive_control-3]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-3]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-3]     import minimalmodbus
-[drive_control-3] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [tower_pan_tilt_control-7]: process has died [pid 55574, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control --ros-args -r __node:=tower_pan_tilt'].
-[INFO] [tower_pan_tilt_control-7]: process started with pid [55636]
-[rviz2-15] [INFO] [1736639455.520187119] [rviz2]: Stereo is NOT SUPPORTED
-[rviz2-15] [INFO] [1736639455.520677374] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
-[ERROR] [drive_control-3]: process has died [pid 55544, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=left_bogie --params-file /tmp/launch_params_u04se67w'].
-[INFO] [drive_control-3]: process started with pid [55643]
-[drive_control-4] Traceback (most recent call last):
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-4]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-4]     return next(matches).load()
-[drive_control-4]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-4]     module = import_module(match.group('module'))
-[drive_control-4]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-4]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-4]     import minimalmodbus
-[drive_control-4] ModuleNotFoundError: No module named 'minimalmodbus'
-[rviz2-15] [INFO] [1736639455.581144596] [rviz2]: Stereo is NOT SUPPORTED
-[iris_controller-1] Traceback (most recent call last):
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 33, in <module>
-[iris_controller-1]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'iris_controller')())
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 25, in importlib_load_entry_point
-[iris_controller-1]     return next(matches).load()
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[iris_controller-1]     module = import_module(match.group('module'))
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[iris_controller-1]     return _bootstrap._gcd_import(name[level:], package, level)
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/iris_controller.py", line 12, in <module>
-[iris_controller-1]     import minimalmodbus
-[iris_controller-1] ModuleNotFoundError: No module named 'minimalmodbus'
-[rosbridge_websocket-13] [WARN] [1736639457.228163055] [rosbridge_websocket]: Unable to start server: [Errno 98] Address already in use Retrying in 5.0s.
-[ERROR] [drive_control-4]: process has died [pid 55579, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=right_bogie --params-file /tmp/launch_params_bv4zkkki'].
-[INFO] [drive_control-4]: process started with pid [55654]
-[effectors_control-8] Traceback (most recent call last):
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 33, in <module>
-[effectors_control-8]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'effectors_control')())
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 25, in importlib_load_entry_point
-[effectors_control-8]     return next(matches).load()
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[effectors_control-8]     module = import_module(match.group('module'))
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[effectors_control-8]     return _bootstrap._gcd_import(name[level:], package, level)
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/effectors_control.py", line 12, in <module>
-[effectors_control-8]     import minimalmodbus
-[effectors_control-8] ModuleNotFoundError: No module named 'minimalmodbus'
-[ERROR] [iris_controller-1]: process has died [pid 55584, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller --ros-args -r __node:=iris_controller --params-file /tmp/launch_params_b_1akfn7'].
-[INFO] [iris_controller-1]: process started with pid [55658]
-[spawner-18] [INFO] [1736639459.148501935] [spawner_rover_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
-[ERROR] [effectors_control-8]: process has died [pid 55586, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control --ros-args -r __node:=effectors'].
-[INFO] [effectors_control-8]: process started with pid [55660]
-[spawner-17] [INFO] [1736639459.449777203] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
-[drive_control-2] Traceback (most recent call last):
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-2]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-2]     return next(matches).load()
-[drive_control-2]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-2]     module = import_module(match.group('module'))
-[drive_control-2]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-2]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-2]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-2]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-2]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 12, in <module>
-[drive_control-2]     import minimalmodbus
-[drive_control-2] ModuleNotFoundError: No module named 'minimalmodbus'
+[servo_node_main-10] [INFO] [1746489003.643597640] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Publishing maintained planning scene on 'monitored_planning_scene'
+[servo_node_main-10] [INFO] [1746489003.655954696] [moveit_ros.current_state_monitor]: Listening to joint states on topic '/joint_states'
+[realsense2_camera_node-11] [INFO] [1746489003.682059720] [camera.d405]: RealSense ROS v4.55.1
+[servo_node_main-10] [INFO] [1746489003.685450216] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/attached_collision_object' for attached collision objects
+[servo_node_main-10] [INFO] [1746489003.685604680] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[servo_node_main-10] [INFO] [1746489003.688235944] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/planning_scene'
+[servo_node_main-10] [INFO] [1746489003.688300136] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting world geometry update monitor for collision objects, attached objects, octomap updates.
+[realsense2_camera_node-11] [INFO] [1746489003.693455816] [camera.d405]: Built with LibRealSense v2.55.1
+[realsense2_camera_node-11] [INFO] [1746489003.694943176] [camera.d405]: Running with LibRealSense v2.55.1
+[servo_node_main-10] [INFO] [1746489003.698633864] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'collision_object'
+[servo_node_main-10] [INFO] [1746489003.702912200] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to 'planning_scene_world' for planning scene world geometry
+[servo_node_main-10] [WARN] [1746489003.703886792] [moveit.ros.occupancy_map_monitor.middleware_handle]: Resolution not specified for Octomap. Assuming resolution = 0.1 instead
+[servo_node_main-10] [ERROR] [1746489003.703940616] [moveit.ros.occupancy_map_monitor.middleware_handle]: No 3D sensor plugin(s) defined for octomap updates
+[move_group-3] [INFO] [1746489003.721577224] [moveit.plugins.moveit_simple_controller_manager]: Added FollowJointTrajectory controller for rover_arm_controller_moveit
+[move_group-3] [INFO] [1746489003.721956008] [moveit.plugins.moveit_simple_controller_manager]: Returned 1 controllers in list
+[move_group-3] [INFO] [1746489003.722016072] [moveit.plugins.moveit_simple_controller_manager]: Returned 1 controllers in list
+[move_group-3] [INFO] [1746489003.724139048] [moveit_ros.trajectory_execution_manager]: Trajectory execution is managing controllers
+[move_group-3] [INFO] [1746489003.724201352] [move_group.move_group]: MoveGroup debug mode is ON
+[realsense2_camera_node-11] [WARN] [1746489003.759104904] [camera.d405]: No RealSense devices were found!
+[spawner-5] [INFO] [1746489003.889813448] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-4] [INFO] [1746489004.270992008] [controller_manager]: Loading controller 'rover_arm_controller'
+[spawner-7] [INFO] [1746489004.291522632] [spawner_rover_arm_controller_moveit]: waiting for service /controller_manager/list_controllers to become available...
+[spawner-6] [INFO] [1746489004.355584072] [spawner_rover_arm_controller]: [94mLoaded [1mrover_arm_controller[0m
+[ros2_control_node-4] [INFO] [1746489004.358708232] [controller_manager]: Configuring controller 'rover_arm_controller'
+[ros2_control_node-4] [INFO] [1746489004.360615496] [rover_arm_controller]: configure successful
+[ros2_control_node-4] [INFO] [1746489004.372484776] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372652232] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372690920] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372732776] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372757064] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372772968] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489004.372930728] [rover_arm_controller]: activate successful
+[ros2_control_node-4] Failed to send CAN frame
+[ros2_control_node-4] Failed to send CAN frame
+[spawner-6] [INFO] [1746489004.384462760] [spawner_rover_arm_controller]: [92mConfigured and activated [1mrover_arm_controller[0m
+[rviz2-1] [INFO] [1746489004.490729192] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-1] [INFO] [1746489004.491149256] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[move_group-3] [INFO] [1746489004.544498408] [move_group.move_group]: 
+[move_group-3] 
+[move_group-3] ********************************************************
+[move_group-3] * MoveGroup using: 
+[move_group-3] *     - ApplyPlanningSceneService
+[move_group-3] *     - ClearOctomapService
+[move_group-3] *     - CartesianPathService
+[move_group-3] *     - ExecuteTrajectoryAction
+[move_group-3] *     - GetPlanningSceneService
+[move_group-3] *     - KinematicsService
+[move_group-3] *     - MoveAction
+[move_group-3] *     - MotionPlanService
+[move_group-3] *     - QueryPlannersService
+[move_group-3] *     - StateValidationService
+[move_group-3] ********************************************************
+[move_group-3] 
+[move_group-3] [INFO] [1746489004.544624232] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context using planning plugin ompl_interface/OMPLPlanner
+[move_group-3] [INFO] [1746489004.544648680] [moveit_move_group_capabilities_base.move_group_context]: MoveGroup context initialization complete
+[move_group-3] [96mLoading 'move_group/ApplyPlanningSceneService'...
+[move_group-3] [0m[96mLoading 'move_group/ClearOctomapService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupCartesianPathService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupExecuteTrajectoryAction'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupGetPlanningSceneService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupKinematicsService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupMoveAction'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupPlanService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupQueryPlannersService'...
+[move_group-3] [0m[96mLoading 'move_group/MoveGroupStateValidationService'...
+[move_group-3] [0m[92m
+[move_group-3] You can start planning now!
+[move_group-3] 
+[ros2_control_node-4] [INFO] [1746489004.562528680] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[rviz2-1] [INFO] [1746489004.591584616] [rviz2]: Stereo is NOT SUPPORTED
+[spawner-5] [INFO] [1746489004.604668808] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[ros2_control_node-4] [INFO] [1746489004.608309704] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[ros2_control_node-4] [INFO] [1746489004.608531336] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[INFO] [spawner-6]: process has finished cleanly [pid 6658]
+[spawner-5] [INFO] [1746489004.734243048] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[rviz2-1] Warning: class_loader.impl: SEVERE WARNING!!! A namespace collision has occurred with plugin factory for class rviz_default_plugins::displays::InteractiveMarkerDisplay. New factory will OVERWRITE existing one. This situation occurs when libraries containing plugins are directly linked against an executable (the one running right now generating this message). Please separate plugins out into their own library or just don't link against the library and use either class_loader::ClassLoader/MultiLibraryClassLoader to open.
+[rviz2-1]          at line 253 in /opt/ros/humble/include/class_loader/class_loader/class_loader_core.hpp
+[INFO] [spawner-5]: process has finished cleanly [pid 6656]
+[ros2_control_node-4] [INFO] [1746489006.810548648] [controller_manager]: Loading controller 'rover_arm_controller_moveit'
+[ros2_control_node-4] [WARN] [1746489006.886172264] [rover_arm_controller_moveit]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[spawner-7] [INFO] [1746489006.895265096] [spawner_rover_arm_controller_moveit]: [94mLoaded [1mrover_arm_controller_moveit[0m
+[ros2_control_node-4] [INFO] [1746489006.899634824] [controller_manager]: Configuring controller 'rover_arm_controller_moveit'
+[ros2_control_node-4] [INFO] [1746489006.900244968] [rover_arm_controller_moveit]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-4] [INFO] [1746489006.900369000] [rover_arm_controller_moveit]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-4] [INFO] [1746489006.900447304] [rover_arm_controller_moveit]: Using 'splines' interpolation method.
+[ros2_control_node-4] [INFO] [1746489006.905184488] [rover_arm_controller_moveit]: Controller state will be published at 50.00 Hz.
+[ros2_control_node-4] [INFO] [1746489006.911641128] [rover_arm_controller_moveit]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-4] [INFO] [1746489006.942438344] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489006.942576104] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489006.942646280] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489006.942698152] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489006.942845000] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489006.942867272] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[ros2_control_node-4] [ERROR] [1746489006.942899592] [controller_manager]: Resource conflict for controller 'rover_arm_controller_moveit'. Command interface 'base_joint/position' is already claimed.
+[ros2_control_node-4] Failed to send CAN frame
+[ros2_control_node-4] Failed to send CAN frame
+[spawner-7] [INFO] [1746489006.954629672] [spawner_rover_arm_controller_moveit]: [92mConfigured and activated [1mrover_arm_controller_moveit[0m
+[INFO] [spawner-7]: process has finished cleanly [pid 6660]
+[rviz2-1] [ERROR] [1746489007.884829800] [moveit_ros_visualization.motion_planning_frame]: Action server: /recognize_objects not available
+[rviz2-1] [INFO] [1746489007.925684712] [moveit_ros_visualization.motion_planning_frame]: MoveGroup namespace changed: / -> . Reloading params.
+[rviz2-1] [INFO] [1746489008.016475976] [moveit_rdf_loader.rdf_loader]: Loaded robot model in 0.00593693 seconds
+[rviz2-1] [INFO] [1746489008.016595336] [moveit_robot_model.robot_model]: Loading robot model 'rover_arm'...
+[rviz2-1] [INFO] [1746489008.192522792] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-1] [INFO] [1746489008.199021864] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[realsense2_camera_node-11] [WARN] [1746489009.781945448] [camera.d405]: No RealSense devices were found!
+[rviz2-1] [INFO] [1746489011.457395944] [interactive_marker_display_187650966513200]: Connected on namespace: /rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic
+[rviz2-1] [INFO] [1746489011.477237096] [moveit_ros_visualization.motion_planning_frame]: group rover_arm
+[rviz2-1] [INFO] [1746489011.477313704] [moveit_ros_visualization.motion_planning_frame]: Constructing new MoveGroup connection for group 'rover_arm' in namespace ''
+[rviz2-1] [INFO] [1746489011.542907464] [move_group_interface]: Ready to take commands for planning group rover_arm.
+[rviz2-1] [INFO] [1746489011.567727688] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Starting planning scene monitor
+[rviz2-1] [INFO] [1746489011.569230216] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Listening to '/monitored_planning_scene'
+[rviz2-1] [INFO] [1746489011.580005736] [interactive_marker_display_187650966513200]: Sending request for interactive markers
+[rviz2-1] [INFO] [1746489011.630743144] [interactive_marker_display_187650966513200]: Service response received for initialization
+[controller_switcher-9] [INFO] [1746489014.047679464] [controller_switcher]: Switching controllers: rover_arm_controller -> rover_arm_controller_moveit
+[ros2_control_node-4] [WARN] [1746489014.048764744] [controller_manager]: 'start_controllers' field is deprecated, use 'activate_controllers' field instead!
+[ros2_control_node-4] [WARN] [1746489014.048969416] [controller_manager]: 'stop_controllers' field is deprecated, use 'deactivate_controllers' field instead!
+[ros2_control_node-4] [INFO] [1746489014.049216360] [controller_manager]: Switch controller timeout is set to 0, using default 1s!
+[ros2_control_node-4] [INFO] [1746489014.052390888] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489014.052496008] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489014.052535080] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489014.052566888] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489014.052598344] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489014.052617480] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[controller_switcher-9] [INFO] [1746489014.063203912] [controller_switcher]: Successfully switched controllers: rover_arm_controller -> rover_arm_controller_moveit
+[controller_switcher-9] [INFO] [1746489015.151592808] [controller_switcher]: Switching controllers: rover_arm_controller_moveit -> rover_arm_controller
+[ros2_control_node-4] [WARN] [1746489015.152186664] [controller_manager]: 'start_controllers' field is deprecated, use 'activate_controllers' field instead!
+[ros2_control_node-4] [WARN] [1746489015.152271336] [controller_manager]: 'stop_controllers' field is deprecated, use 'deactivate_controllers' field instead!
+[ros2_control_node-4] [INFO] [1746489015.152459176] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152545800] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152615720] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152660232] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152689736] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152704680] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489015.152833576] [rover_arm_controller]: activate successful
+[ros2_control_node-4] Failed to send CAN frame
+[ros2_control_node-4] Failed to send CAN frame
+[controller_switcher-9] [INFO] [1746489015.163224424] [controller_switcher]: Successfully switched controllers: rover_arm_controller_moveit -> rover_arm_controller
+[realsense2_camera_node-11] [WARN] [1746489015.804235400] [camera.d405]: No RealSense devices were found!
+[controller_switcher-9] [INFO] [1746489017.747512040] [controller_switcher]: Switching controllers: rover_arm_controller -> rover_arm_controller_moveit
+[ros2_control_node-4] [WARN] [1746489017.748448232] [controller_manager]: 'start_controllers' field is deprecated, use 'activate_controllers' field instead!
+[ros2_control_node-4] [WARN] [1746489017.748607560] [controller_manager]: 'stop_controllers' field is deprecated, use 'deactivate_controllers' field instead!
+[ros2_control_node-4] [INFO] [1746489017.752369224] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489017.752492072] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489017.752546760] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489017.752602536] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489017.752632392] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489017.752652776] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[controller_switcher-9] [INFO] [1746489017.763063336] [controller_switcher]: Successfully switched controllers: rover_arm_controller -> rover_arm_controller_moveit
+[controller_switcher-9] [INFO] [1746489018.750596776] [controller_switcher]: Switching controllers: rover_arm_controller_moveit -> rover_arm_controller
+[ros2_control_node-4] [WARN] [1746489018.751117064] [controller_manager]: 'start_controllers' field is deprecated, use 'activate_controllers' field instead!
+[ros2_control_node-4] [WARN] [1746489018.751223496] [controller_manager]: 'stop_controllers' field is deprecated, use 'deactivate_controllers' field instead!
+[ros2_control_node-4] [INFO] [1746489018.752413928] [ODriveHardwareInterface]: Setting base_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.752507272] [ODriveHardwareInterface]: Setting shoulder_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.752574696] [ODriveHardwareInterface]: Setting elbow_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.752635784] [ODriveHardwareInterface]: Setting elbow_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.752664328] [ODriveHardwareInterface]: Setting wrist_pitch_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.752679752] [ODriveHardwareInterface]: Setting wrist_roll_joint to position control
+[ros2_control_node-4] [INFO] [1746489018.753106024] [rover_arm_controller]: activate successful
+[ros2_control_node-4] Failed to send CAN frame
+[controller_switcher-9] [INFO] [1746489018.762759400] [controller_switcher]: Successfully switched controllers: rover_arm_controller_moveit -> rover_arm_controller
 [WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
-[drive_control-3] Traceback (most recent call last):
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[drive_control-3]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-3]     return next(matches).load()
-[drive_control-3]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[rover_camera-12] [0m[INFO] [1736639461.529658484] [rclcpp]: signal_handler(signum=2)[0m
-[rover_camera-11] [0m[INFO] [1736639461.529880251] [rclcpp]: signal_handler(signum=2)[0m
-[rover_camera-10] [0m[INFO] [1736639461.530454732] [rclcpp]: signal_handler(signum=2)[0m
-[rover_camera-9] [0m[INFO] [1736639461.530581872] [rclcpp]: signal_handler(signum=2)[0m
-[drive_control-4] Traceback (most recent call last):
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 33, in <module>
-[ERROR] [drive_control-2]: process has died [pid 55603, exit code 1, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=rear_bogie --params-file /tmp/launch_params_0btopoju'].
-[servo_node_main-19] [INFO] [1736639461.529534160] [rclcpp]: signal_handler(signum=2)
-[ERROR] [effectors_control-8]: process has died [pid 55660, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control --ros-args -r __node:=effectors'].
-[ERROR] [iris_controller-1]: process has died [pid 55658, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller --ros-args -r __node:=iris_controller --params-file /tmp/launch_params_b_1akfn7'].
-[ERROR] [drive_control-4]: process has died [pid 55654, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=right_bogie --params-file /tmp/launch_params_bv4zkkki'].
-[ERROR] [chassis_pan_tilt_control-6]: process has died [pid 55629, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control --ros-args -r __node:=chassis_pan_tilt'].
-[ERROR] [tower_pan_tilt_control-7]: process has died [pid 55636, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control --ros-args -r __node:=tower_pan_tilt'].
-[ERROR] [drive_control-3]: process has died [pid 55643, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control --ros-args -r __node:=left_bogie --params-file /tmp/launch_params_u04se67w'].
-[component_container_mt-21] [INFO] [1736639461.529537680] [rclcpp]: signal_handler(signum=2)
-[joy_to_servo_node-20] [INFO] [1736639461.529537488] [rclcpp]: signal_handler(signum=2)
-[rosbridge_websocket-13] registered capabilities (classes):
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.advertise.Advertise'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.publish.Publish'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.subscribe.Subscribe'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.defragmentation.Defragment'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.advertise_service.AdvertiseService'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.call_service.CallService'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.service_response.ServiceResponse'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.unadvertise_service.UnadvertiseService'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.advertise_action.AdvertiseAction'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.action_feedback.ActionFeedback'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.action_result.ActionResult'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.send_action_goal.SendActionGoal'>
-[rosbridge_websocket-13]  - <class 'rosbridge_library.capabilities.unadvertise_action.UnadvertiseAction'>
-[rosbridge_websocket-13] Traceback (most recent call last):
-[rosbridge_websocket-13]   File "/opt/ros/humble/lib/rosbridge_server/rosbridge_websocket", line 161, in __init__
-[rosbridge_websocket-13]     sockets = bind_sockets(port, address)
-[rosbridge_websocket-13]   File "/usr/lib/python3/dist-packages/tornado/netutil.py", line 161, in bind_sockets
-[rosbridge_websocket-13]     sock.bind(sockaddr)
-[rosbridge_websocket-13] OSError: [Errno 98] Address already in use
-[rosbridge_websocket-13] 
-[rosbridge_websocket-13] During handling of the above exception, another exception occurred:
-[rosbridge_websocket-13] 
-[rosbridge_websocket-13] Traceback (most recent call last):
-[rosbridge_websocket-13]   File "/opt/ros/humble/lib/rosbridge_server/rosbridge_websocket", line 359, in <module>
-[rosbridge_websocket-13]     main()
-[rosbridge_websocket-13]   File "/opt/ros/humble/lib/rosbridge_server/rosbridge_websocket", line 336, in main
-[rosbridge_websocket-13]     node = RosbridgeWebsocketNode()
-[rosbridge_websocket-13]   File "/opt/ros/humble/lib/rosbridge_server/rosbridge_websocket", line 172, in __init__
-[rosbridge_websocket-13]     time.sleep(retry_startup_delay)
-[rosbridge_websocket-13] KeyboardInterrupt
-[drive_control-4]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_control')())
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_control", line 25, in importlib_load_entry_point
-[drive_control-4]     return next(matches).load()
-[drive_control-4]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[drive_control-4]     module = import_module(match.group('module'))
-[drive_control-4]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-4]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-3]     module = import_module(match.group('module'))
-[drive_control-3]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[drive_control-3]     return _bootstrap._gcd_import(name[level:], package, level)
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-4]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-4]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-4]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 7, in <module>
-[drive_control-4]     from rclpy.node import Node
-[drive_control-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 44, in <module>
-[drive_control-4]     from rclpy.client import Client
-[drive_control-4]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/client.py", line 23, in <module>
-[drive_control-4]     from rclpy.qos import QoSProfile
-[drive_control-4] KeyboardInterrupt
-[drive_coordinator-5] Traceback (most recent call last):
-[drive_coordinator-5]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_coordinator", line 33, in <module>
-[drive_coordinator-5]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'drive_coordinator')())
-[drive_coordinator-5]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_coordinator.py", line 141, in main
-[drive_coordinator-5]     rclpy.spin(drive_Cord)
-[drive_coordinator-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 226, in spin
-[drive_coordinator-5]     executor.spin_once()
-[drive_coordinator-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 739, in spin_once
-[drive_coordinator-5]     self._spin_once_impl(timeout_sec)
-[drive_coordinator-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 728, in _spin_once_impl
-[drive_coordinator-5]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
-[drive_coordinator-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 711, in wait_for_ready_callbacks
-[drive_coordinator-5]     return next(self._cb_iter)
-[drive_coordinator-5]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 608, in _wait_for_ready_callbacks
-[drive_coordinator-5]     wait_set.wait(timeout_nsec)
-[drive_coordinator-5] KeyboardInterrupt
-[chassis_pan_tilt_control-6] Traceback (most recent call last):
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 33, in <module>
-[chassis_pan_tilt_control-6]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'chassis_pan_tilt_control')())
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/chassis_pan_tilt_control", line 25, in importlib_load_entry_point
-[chassis_pan_tilt_control-6]     return next(matches).load()
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[chassis_pan_tilt_control-6]     module = import_module(match.group('module'))
-[chassis_pan_tilt_control-6]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[chassis_pan_tilt_control-6]     return _bootstrap._gcd_import(name[level:], package, level)
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[chassis_pan_tilt_control-6]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[chassis_pan_tilt_control-6]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/chassis_pan_tilt_control.py", line 7, in <module>
-[chassis_pan_tilt_control-6]     from rclpy.node import Node
-[chassis_pan_tilt_control-6]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 78, in <module>
-[chassis_pan_tilt_control-6]     from rclpy.topic_endpoint_info import TopicEndpointInfo
-[chassis_pan_tilt_control-6] KeyboardInterrupt
-[iris_controller-1] Traceback (most recent call last):
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 33, in <module>
-[iris_controller-1]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'iris_controller')())
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/iris_controller", line 25, in importlib_load_entry_point
-[iris_controller-1]     return next(matches).load()
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[iris_controller-1]     module = import_module(match.group('module'))
-[iris_controller-1]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[iris_controller-1]     return _bootstrap._gcd_import(name[level:], package, level)
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[iris_controller-1]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[iris_controller-1]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[iris_controller-1]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/iris_controller.py", line 6, in <module>
-[iris_controller-1]     import rclpy
-[iris_controller-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 49, in <module>
-[iris_controller-1]     from rclpy.signals import install_signal_handlers
-[iris_controller-1]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/signals.py", line 15, in <module>
-[iris_controller-1]     from rclpy.exceptions import InvalidHandle
-[iris_controller-1] KeyboardInterrupt
-[tower_pan_tilt_control-7] Traceback (most recent call last):
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 33, in <module>
-[tower_pan_tilt_control-7]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'tower_pan_tilt_control')())
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/tower_pan_tilt_control", line 25, in importlib_load_entry_point
-[tower_pan_tilt_control-7]     return next(matches).load()
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[tower_pan_tilt_control-7]     module = import_module(match.group('module'))
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[tower_pan_tilt_control-7]     return _bootstrap._gcd_import(name[level:], package, level)
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[tower_pan_tilt_control-7]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[tower_pan_tilt_control-7]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/tower_pan_tilt_control.py", line 7, in <module>
-[tower_pan_tilt_control-7]     from rclpy.node import Node
-[tower_pan_tilt_control-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 58, in <module>
-[tower_pan_tilt_control-7]     from rclpy.executors import Executor
-[tower_pan_tilt_control-7]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 15, in <module>
-[tower_pan_tilt_control-7]     from concurrent.futures import ThreadPoolExecutor
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/concurrent/futures/__init__.py", line 8, in <module>
-[tower_pan_tilt_control-7]     from concurrent.futures._base import (FIRST_COMPLETED,
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/concurrent/futures/_base.py", line 7, in <module>
-[tower_pan_tilt_control-7]     import logging
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/logging/__init__.py", line 445, in <module>
-[tower_pan_tilt_control-7]     class StrFormatStyle(PercentStyle):
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/logging/__init__.py", line 451, in StrFormatStyle
-[tower_pan_tilt_control-7]     field_spec = re.compile(r'^(\d+|\w+)(\.\w+|\[[^]]+\])*$')
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/re.py", line 251, in compile
-[tower_pan_tilt_control-7]     return _compile(pattern, flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/re.py", line 303, in _compile
-[tower_pan_tilt_control-7]     p = sre_compile.compile(pattern, flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 792, in compile
-[tower_pan_tilt_control-7]     code = _code(p, flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 631, in _code
-[tower_pan_tilt_control-7]     _compile(code, p.data, flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 184, in _compile
-[tower_pan_tilt_control-7]     _compile(code, p, _combine_flags(flags, add_flags, del_flags))
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 225, in _compile
-[tower_pan_tilt_control-7]     _compile(code, av, flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 164, in _compile
-[tower_pan_tilt_control-7]     _compile(code, av[2], flags)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 136, in _compile
-[tower_pan_tilt_control-7]     charset, hascased = _optimize_charset(av, iscased, tolower, fixes)
-[tower_pan_tilt_control-7]   File "/usr/lib/python3.10/sre_compile.py", line 381, in _optimize_charset
-[tower_pan_tilt_control-7]     if hascased or len(out) < len(charset):
-[tower_pan_tilt_control-7] KeyboardInterrupt
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[drive_control-3]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/drive_control.py", line 7, in <module>
-[drive_control-3]     from rclpy.node import Node
-[drive_control-3]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 75, in <module>
-[drive_control-3]     from rclpy.time_source import TimeSource
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 879, in exec_module
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 1016, in get_code
-[drive_control-3]   File "<frozen importlib._bootstrap_external>", line 1073, in get_data
-[drive_control-3] KeyboardInterrupt
-[effectors_control-8] Traceback (most recent call last):
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 33, in <module>
-[effectors_control-8]     sys.exit(load_entry_point('rover2-control==0.0.0', 'console_scripts', 'effectors_control')())
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/effectors_control", line 25, in importlib_load_entry_point
-[effectors_control-8]     return next(matches).load()
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/metadata/__init__.py", line 171, in load
-[effectors_control-8]     module = import_module(match.group('module'))
-[effectors_control-8]   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-[effectors_control-8]     return _bootstrap._gcd_import(name[level:], package, level)
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-[effectors_control-8]   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-[effectors_control-8]   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-[effectors_control-8]   File "/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/python3.10/site-packages/rover2_control/effectors_control.py", line 6, in <module>
-[effectors_control-8]     import rclpy
-[effectors_control-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 48, in <module>
-[effectors_control-8]     from rclpy.parameter import Parameter
-[effectors_control-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/parameter.py", line 18, in <module>
-[effectors_control-8]     from rcl_interfaces.msg import Parameter as ParameterMsg
-[effectors_control-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rcl_interfaces/msg/__init__.py", line 1, in <module>
-[effectors_control-8]     from rcl_interfaces.msg._floating_point_range import FloatingPointRange  # noqa: F401
-[effectors_control-8]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rcl_interfaces/msg/_floating_point_range.py", line 12, in <module>
-[effectors_control-8]     import rosidl_parser.definition  # noqa: E402, I100
-[effectors_control-8] KeyboardInterrupt
-[INFO] [rover_camera-9]: process has finished cleanly [pid 55389]
-[rviz2-15] [INFO] [1736639461.590107366] [rclcpp]: signal_handler(signum=2)
-[rviz2-15] [ERROR] [1736639461.789678911] [rviz2]: Could not load display config: could not create publisher: rcl node's context is invalid, at ./src/rcl/node.c:428
-[servo_node_main-19] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
-[servo_node_main-19]          at line 127 in ./src/class_loader.cpp
-[servo_node_main-19] [INFO] [1736639462.206526240] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopped publishing maintained planning scene.
-[servo_node_main-19] [INFO] [1736639462.248353860] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping world geometry monitor
-[servo_node_main-19] [INFO] [1736639462.277311463] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
-[rosapi_node-14] Traceback (most recent call last):
-[rosapi_node-14]   File "/opt/ros/humble/lib/rosapi/rosapi_node", line 329, in <module>
-[rosapi_node-14]     main()
-[rosapi_node-14]   File "/opt/ros/humble/lib/rosapi/rosapi_node", line 319, in main
-[rosapi_node-14]     node = Rosapi()
-[rosapi_node-14]   File "/opt/ros/humble/lib/rosapi/rosapi_node", line 81, in __init__
-[rosapi_node-14]     self.register_services()
-[rosapi_node-14]   File "/opt/ros/humble/lib/rosapi/rosapi_node", line 105, in register_services
-[rosapi_node-14]     self.create_service(TopicType, "/rosapi/topic_type", self.get_topic_type)
-[rosapi_node-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/node.py", line 1462, in create_service
-[rosapi_node-14]     service_impl = _rclpy.Service(
-[rosapi_node-14] KeyboardInterrupt
-[INFO] [joy_to_servo_node-20]: process has finished cleanly [pid 55411]
-[INFO] [rover_camera-10]: process has finished cleanly [pid 55391]
-[INFO] [rover_camera-11]: process has finished cleanly [pid 55393]
-[INFO] [component_container_mt-21]: process has finished cleanly [pid 55415]
-[INFO] [spawner-18]: process has finished cleanly [pid 55407]
-[INFO] [spawner-17]: process has finished cleanly [pid 55405]
-[INFO] [servo_node_main-19]: process has finished cleanly [pid 55409]
-[ERROR] [rosapi_node-14]: process has died [pid 55399, exit code -2, cmd '/opt/ros/humble/lib/rosapi/rosapi_node --ros-args -r __node:=rosapi --params-file /tmp/launch_params_gmfeixfq --params-file /tmp/launch_params_h4wur8i7 --params-file /tmp/launch_params_1fzakorf'].
-[ERROR] [drive_coordinator-5]: process has died [pid 55381, exit code -2, cmd '/home/makemorerobot/Rover_2023_2024/software/install/rover2_control/lib/rover2_control/drive_coordinator --ros-args -r __node:=drive_coordinator'].
-[ERROR] [rosbridge_websocket-13]: process has died [pid 55397, exit code -2, cmd '/opt/ros/humble/lib/rosbridge_server/rosbridge_websocket --ros-args -r __node:=rosbridge_websocket --params-file /tmp/launch_params_hgjsov2w --params-file /tmp/launch_params_esj3peg1 --params-file /tmp/launch_params_xrvk12gh --params-file /tmp/launch_params_j30u7yyf --params-file /tmp/launch_params_82cw9pwu --params-file /tmp/launch_params_jz8xr8yz --params-file /tmp/launch_params_dboxyibi --params-file /tmp/launch_params_5_1o93y1 --params-file /tmp/launch_params_rmm4suhi --params-file /tmp/launch_params_emehj0ec --params-file /tmp/launch_params_1jh6gvxu --params-file /tmp/launch_params_297r9rm2 --params-file /tmp/launch_params_am1zya0w --params-file /tmp/launch_params_x733gimc'].
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
-[rover_camera-12] [0m[INFO] [1736639467.167201525] [rclcpp]: signal_handler(signum=2)[0m
-[ERROR] [rviz2-15]: process has died [pid 55401, exit code -2, cmd '/opt/ros/humble/lib/rviz2/rviz2 -d /home/makemorerobot/Rover_2023_2024/software/install/rover_arm/share/rover_arm/config/rviz_config.rviz --ros-args -r __node:=rviz2 --params-file /tmp/launch_params_was5op47 --params-file /tmp/launch_params_udo_w12y --params-file /tmp/launch_params_m3hs28ar --params-file /tmp/launch_params_b5v2e5i2 --params-file /tmp/launch_params_yjieqi2d --params-file /tmp/launch_params_6dv1pawe'].
-[ERROR] [rover_camera-12]: process[rover_camera-12] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
-[INFO] [rover_camera-12]: sending signal 'SIGTERM' to process[rover_camera-12]
-[rover_camera-12] [0m[INFO] [1736639467.320027373] [rclcpp]: signal_handler(signum=15)[0m
-[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
-[rover_camera-12] [0m[INFO] [1736639469.230850650] [rclcpp]: signal_handler(signum=2)[0m
+[move_group-3] [INFO] [1746489021.253646152] [rclcpp]: signal_handler(signum=2)
+[INFO] [joy_to_servo_node-8]: process has finished cleanly [pid 6662]
+[INFO] [controller_switcher-9]: process has finished cleanly [pid 6678]
+[INFO] [servo_node_main-10]: process has finished cleanly [pid 6691]
+[INFO] [component_container_mt-2]: process has finished cleanly [pid 6650]
+[INFO] [ros2_control_node-4]: process has finished cleanly [pid 6654]
+[realsense2_camera_node-11] [INFO] [1746489021.253640008] [rclcpp]: signal_handler(signum=2)
+[rviz2-1] [INFO] [1746489021.253640840] [rclcpp]: signal_handler(signum=2)
+[joy_to_servo_node-8] [INFO] [1746489021.253651208] [rclcpp]: signal_handler(signum=2)
+[controller_switcher-9] [INFO] [1746489021.253650888] [rclcpp]: signal_handler(signum=2)
+[component_container_mt-2] [INFO] [1746489021.253682376] [rclcpp]: signal_handler(signum=2)
+[servo_node_main-10] [INFO] [1746489021.253745800] [rclcpp]: signal_handler(signum=2)
+[ros2_control_node-4] [INFO] [1746489021.253795528] [rclcpp]: signal_handler(signum=2)
+[rviz2-1] [WARN] [1746489021.262734984] [interactive_marker_display_187650966513200]: Server not available while running, resetting
+[rviz2-1] [INFO] [1746489021.427203912] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
+[rviz2-1] [INFO] [1746489021.440962216] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
+[servo_node_main-10] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+[servo_node_main-10]          at line 127 in ./src/class_loader.cpp
+[servo_node_main-10] [INFO] [1746489021.297582120] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[servo_node_main-10] [INFO] [1746489021.302511304] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping world geometry monitor
+[servo_node_main-10] [INFO] [1746489021.304237672] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
+[move_group-3] [INFO] [1746489021.353549896] [moveit.ros_planning_interface.moveit_cpp]: Deleting MoveItCpp
+[move_group-3] [INFO] [1746489021.507311272] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopped publishing maintained planning scene.
+[move_group-3] [INFO] [1746489021.508822376] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping world geometry monitor
+[move_group-3] [INFO] [1746489021.509692808] [moveit_ros.planning_scene_monitor.planning_scene_monitor]: Stopping planning scene monitor
+[move_group-3] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+[move_group-3]          at line 127 in ./src/class_loader.cpp
+[move_group-3] Stack trace (most recent call last):
+[move_group-3] #16   Object "/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1", at 0xffffffffffffffff, in 
+[move_group-3] #15   Object "/opt/ros/humble/lib/moveit_ros_move_group/move_group", at 0xaaaad7d5f42f, in 
+[move_group-3] #14   Source "../csu/libc-start.c", line 392, in __libc_start_main_impl [0xffffb62f74cb]
+[move_group-3] #13   Source "../sysdeps/nptl/libc_start_call_main.h", line 58, in __aarch64_ldadd4_acq [0xffffb62f73fb]
+[move_group-3] #12   Object "/opt/ros/humble/lib/moveit_ros_move_group/move_group", at 0xaaaad7d5e4b3, in 
+[move_group-3] #11   Object "/opt/ros/humble/lib/moveit_ros_move_group/move_group", at 0xaaaad7d5f64f, in 
+[move_group-3] #10   Object "/opt/ros/humble/lib/libmoveit_cpp.so.2.5.6", at 0xffffb6c95527, in moveit_cpp::MoveItCpp::~MoveItCpp()
+[move_group-3] #9    Object "/opt/ros/humble/lib/libmoveit_cpp.so.2.5.6", at 0xffffb6c93e3f, in 
+[move_group-3] #8    Object "/opt/ros/humble/lib/libmoveit_trajectory_execution_manager.so.2.5.6", at 0xffffb5f94483, in trajectory_execution_manager::TrajectoryExecutionManager::~TrajectoryExecutionManager()
+[move_group-3] #7    Object "/opt/ros/humble/lib/libmoveit_trajectory_execution_manager.so.2.5.6", at 0xffffb5fa5883, in 
+[move_group-3] #6    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68ce4f3, in rclcpp::Node::~Node()
+[move_group-3] #5    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68ce477, in rclcpp::Node::~Node()
+[move_group-3] #4    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68a5ce3, in 
+[move_group-3] #3    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68d8703, in 
+[move_group-3] #2    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68d8607, in rclcpp::node_interfaces::NodeBase::~NodeBase()
+[move_group-3] #1    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68a5ce3, in 
+[move_group-3] #0    Object "/opt/ros/humble/lib/librclcpp.so", at 0xffffb68aaab8, in rclcpp::CallbackGroup::~CallbackGroup()
+[move_group-3] Segmentation fault (Address not mapped to object [0xffff969f0868])
+[ERROR] [rviz2-1]: process has died [pid 6648, exit code -11, cmd '/opt/ros/humble/lib/rviz2/rviz2 -d /home/makemorerobot/Rover_2023_2024/software/install/rover_arm/share/rover_arm/config/rviz_config.rviz --ros-args -r __node:=rviz2 --params-file /tmp/launch_params_zbszt4su --params-file /tmp/launch_params_bnf64axx --params-file /tmp/launch_params_bdb72ie9 --params-file /tmp/launch_params_0b5rh3wf --params-file /tmp/launch_params_m2jx12i3'].
+[INFO] [realsense2_camera_node-11]: process has finished cleanly [pid 6701]
+[ERROR] [move_group-3]: process has died [pid 6652, exit code -11, cmd '/opt/ros/humble/lib/moveit_ros_move_group/move_group --ros-args --log-level info --ros-args --params-file /tmp/launch_params_z6xsqmgh --params-file /tmp/launch_params_ozikwofo'].
+[move_group-3] [0m
