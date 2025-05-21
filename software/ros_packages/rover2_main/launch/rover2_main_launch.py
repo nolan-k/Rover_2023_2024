@@ -16,7 +16,6 @@ def generate_launch_description():
          get_package_share_directory('rover_camera'),
          'launch'), '/camera_launch.py'])
       )
-
    bridge = IncludeLaunchDescription(
       XMLLaunchDescriptionSource([os.path.join(
          get_package_share_directory('rosbridge_server'),
@@ -29,10 +28,9 @@ def generate_launch_description():
       )
    arm = IncludeLaunchDescription(
       PythonLaunchDescriptionSource([os.path.join(
-	 get_package_share_directory('rover_arm'),
-	 'launch'), '/rover_arm.launch.py'])
+         get_package_share_directory('rover_arm'),
+         'launch'), '/rover_arm.launch.py'])
       )
-
 #   status = IncludeLaunchDescription(
 #      PythonLaunchDescriptionSource([os.path.join(
 #         get_package_share_directory('rover2_status'),

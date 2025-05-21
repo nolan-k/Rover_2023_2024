@@ -192,7 +192,7 @@ class Odometry(Node):
         if (offset_heading > 180):
             offset_heading -=360
         
-        print(offset_heading)
+        #print(offset_heading)
 #        if(offset_heading > 180):
 #            offset_heading-=360
         heading_message.data = offset_heading

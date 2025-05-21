@@ -9,4 +9,4 @@ sudo ip link set can1 up type can bitrate 500000
 sudo ip link set can0 up type can bitrate 500000
 
 source /home/makemorerobot/Rover_2023_2024/software/install/setup.bash
-ros2 launch rover2_control odrive_drive_control_launch.py
+ros2 launch rover2_main rover2_main_launch.py

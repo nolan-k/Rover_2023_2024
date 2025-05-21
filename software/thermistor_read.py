@@ -40,7 +40,8 @@ node_error_msg =[(0,0) for i in range(len(nodes))]
 node_velocity = [0,0,0,0,0,0]
 node_position = [0,0,0,0,0,0]
 bus = can.interface.Bus("can0", interface="socketcan")
-
+node_iq_setpoint = [0,0,0,0,0,0]
+node_iq_measured = [0,0,0,0,0,0]
 # Flush CAN RX buffer so there are no more old pending messages
 while not (bus.recv(timeout=0) is None): pass
 
@@ -54,11 +55,12 @@ def generate_table():
     table.add_column("DISARM Reason")
     table.add_column("VELOCITY")
     table.add_column("POSITION")
-
+    table.add_column("IQ Setpoint")
+    table.add_column("IQ Measured")
 
     for i in nodes:
 #        print(node_motor_temp[i])
-        table.add_row(str(i),str(node_fet_temp[i]),str(node_motor_temp[i]),str(node_error_msg[i][0]),odrive_errors_by_code[str(node_error_msg[i][1])],str(node_velocity[i]),str(node_position[i]))
+        table.add_row(str(i),str(node_fet_temp[i]),str(node_motor_temp[i]),str(node_error_msg[i][0]),odrive_errors_by_code[str(node_error_msg[i][1])],str(node_velocity[i]),str(node_position[i]),str(node_iq_setpoint[i]),str(node_iq_measured[i]))
     return table
 
 def round(value, sigfig):
@@ -67,7 +69,7 @@ def round(value, sigfig):
     value = value/(10**sigfig)
     return value
 
-with Live(generate_table(), refresh_per_second=60) as live:
+with Live(generate_table(), refresh_per_second=15) as live:
     for msg in bus:
         for node_id in nodes:
             if msg.arbitration_id == (node_id << 5 | 0x15): # 0x01: Heartbeat
@@ -88,5 +90,10 @@ with Live(generate_table(), refresh_per_second=60) as live:
                 pos_estimate,vel_estimate = struct.unpack('<ff',bytes(msg.data))
                 node_position[node_id] = round(pos_estimate,3)
                 node_velocity[node_id] = round(vel_estimate,3)
+            if msg.arbitration_id == (node_id << 5 | 0x14): # Error   
+                iq_setpoint,iq_measured = struct.unpack('<ff',bytes(msg.data))
+                node_iq_setpoint[node_id] = round(iq_setpoint,1)
+                node_iq_measured[node_id] = round(iq_measured,1)
+
 
         live.update(generate_table())

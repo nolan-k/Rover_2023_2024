@@ -14,7 +14,7 @@ def get_target_heading(rover_position, target):
     lat2 = target.latitude
     lon2 = target.longitude
     result = geod.Inverse(lat1, lon1, lat2, lon2)
-    return result['azi1']
+    return result['azi1'] # dont ask me why
 
 def get_distance_to_location(rover_position, target):
     geod = Geodesic.WGS84

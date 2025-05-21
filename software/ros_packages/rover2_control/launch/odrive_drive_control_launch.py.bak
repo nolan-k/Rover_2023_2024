@@ -36,6 +36,25 @@ def generate_launch_description():
     urdf_path = PathJoinSubstitution([FindPackageShare(pkg_name), 'rover2_control', 'drive_control.xacro'])
     controller_config = PathJoinSubstitution([FindPackageShare(pkg_name), 'rover2_control', 'odrive_drive_ros2_control.yaml'])
 
+    ros2_control_hardware_type = DeclareLaunchArgument(
+        "ros2_control_hardware_type",
+        default_value="main",
+        description="Ros2 Control Hardware Interface Type [main, sim]",
+    )
+
+
+    drive_ros2_controllers_path = os.path.join(
+        get_package_share_directory("rover2_control"),
+        "rover2_control",
+        "odrive_drive_ros2_control.yaml",
+    )
+
+    ros2_control_node = Node(
+        package="controller_manager",
+        executable="ros2_control_node",
+        parameters=[drive_ros2_controllers_path],
+
+    )
 
     config = {
         'emulate_tty': True,
@@ -47,13 +66,32 @@ def generate_launch_description():
     return LaunchDescription([
         # Robot State Publisher
         
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': Command([
+                FindExecutable(name='xacro'), ' ', urdf_path
+            ])}]
+        ),
+        # ros2_control Node
+        Node(
+            package='controller_manager',
+            executable='ros2_control_node',
+            parameters=[{'robot_description': Command([
+                FindExecutable(name='xacro'), ' ', urdf_path
+            ])}, controller_config],
+            output='screen'
+        ),
+	ros2_control_node,
         
         # Joy Node to convert joystick input to velocities
 
         Node(
             package='rover2_control',  # Replace with your package name
-            executable='drive_can_control',  # This is the node you created above
-            name='drive_can_control',
+            executable='joy_to_drive',  # This is the node you created above
+            name='joy_to_drive',
             output='screen'
         ),
         # IRIS controller
@@ -68,6 +106,19 @@ def generate_launch_description():
             **config
         ),
         # Load joint_state_broadcaster after ros2_control_node is up
+
+	Node(
+            package='controller_manager',
+            executable='spawner',
+            arguments=['drive_state_broadcaster'],
+            output='screen'
+        ),
+        Node(
+            package='controller_manager',
+            executable='spawner',
+            arguments=['can_controller', "-c", "/controller_manager"],
+            output='screen'
+        ),
 
         Node(
             package='rover2_control',

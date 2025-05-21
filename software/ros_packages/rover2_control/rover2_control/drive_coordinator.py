@@ -76,11 +76,6 @@ class DriveCoordinator(Node):
         # ########## Run the Class ##########
         self.timer = self.create_timer(self.wait_time, self.main_loop)
 
-    def main_loop(self):
-        try:
-            self.process_drive_commands()
-        except Exception as error:
-            print (f"COORDINATOR: Error occurred: {error}")
 
     def process_drive_commands(self):
         if self.drive_command_data["ground_station"]["message"].controller_present:
