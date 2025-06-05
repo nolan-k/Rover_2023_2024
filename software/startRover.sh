@@ -10,4 +10,3 @@ sudo ip link set can0 up type can bitrate 500000
 
 source /home/makemorerobot/Rover_2023_2024/software/install/setup.bash
 ros2 launch rover2_main rover2_main_launch.py
-

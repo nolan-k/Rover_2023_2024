@@ -34,7 +34,8 @@ setup(
             'auton_controller = rover2_control.auton_controller:main',
             'joy_to_drive = rover2_control.joy_to_drive:main',
             'auton_typing = rover2_control.auton_typing:main',
-
+            'odrive_drive_control = rover2_control.odrive_drive_control:main',
+            'drive_can_control = rover2_control.drive_can_control:main'
         ],
     },
 )

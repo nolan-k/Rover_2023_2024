@@ -37,7 +37,6 @@ def load_yaml(package_name, file_path):
 
 def generate_launch_description():
 
-
     ros2_control_hardware_type = DeclareLaunchArgument(
         "ros2_control_hardware_type",
         default_value="main",
@@ -53,6 +52,12 @@ def generate_launch_description():
     kinematics_yaml = load_yaml(
         "rover_arm", "config/kinematics.yaml"   
     )
+
+    config = {
+        'emulate_tty': True,
+        'output': 'screen',
+        'respawn': True
+    }
 
     #ros2_control_hardware_type = LaunchConfiguration(ros2_control_hardware_type)
     moveit_config = (
@@ -123,20 +128,20 @@ def generate_launch_description():
             "--controller-manager-timeout",
             "300",
             "--controller-manager",
-            "/controller_manager",
+            "/controller_manager/arm",
         ],
     )
 
     rover_arm_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["rover_arm_controller", "-c", "/controller_manager"],
+        arguments=["rover_arm_controller", "-c", "/controller_manager/arm"],
     )
 
     moveit_arm_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["rover_arm_controller_moveit", "-c", "/controller_manager"],
+        arguments=["rover_arm_controller_moveit", "-c", "/controller_manager/arm"],
     )
 
 

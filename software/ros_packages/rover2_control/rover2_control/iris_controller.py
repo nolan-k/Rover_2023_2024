@@ -126,7 +126,7 @@ class IrisController(Node):
 
         self.published_pose_controller = False
 
-        self.published_ik_controller = False
+        self.published_ik_controller = True
 
         
         self.sa_switch_toggle = False
@@ -139,11 +139,13 @@ class IrisController(Node):
 
     def main_loop(self):
         try:
+
             self.read_registers()
             self.broadcast_drive_if_current_mode()
             self.broadcast_arm_if_current_mode()
             self.broadcast_iris_status()
             self.broadcast_arm_change_controller()
+      
         except Exception as error:
             print(f"IRIS: Error occurred: {error}")
 
@@ -182,6 +184,10 @@ class IrisController(Node):
                 command.controller_present = True
                 command.drive_twist.linear.x = (left + right) / 2.0
                 command.drive_twist.angular.z = (right - left) / 2.0
+                if abs(command.drive_twist.linear.x) < 0.025:
+                    command.drive_twist.linear.x = 0.0
+                if abs(command.drive_twist.angular.z) < 0.025:
+                    command.drive_twist.angular.z = 0.0
 
             self.drive_command_publisher.publish(command)
 
@@ -256,9 +262,9 @@ class IrisController(Node):
                         
                         if abs(axes[i]) < STICK_DEADZONE:
                             axes[i] = 0.0
-
-                print(axes)
-                self.publish_joy_msg(axes,buttons)
+                if sum(axes) != 0.0:
+                    print(axes)
+                    self.publish_joy_msg(axes,buttons)
                 #EMULATE JOY        
 
     def publish_joy_msg(self,axes,buttons):
@@ -266,7 +272,6 @@ class IrisController(Node):
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.axes = axes
         msg.buttons = buttons
-        print(msg.buttons)
         self.joy_command_publisher.publish(msg)
 
     def broadcast_arm_change_controller(self):

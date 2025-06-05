@@ -4,13 +4,13 @@ controller_manager:
 
     use_sim_time: false
 
-    joint_state_broadcaster:
+    drive_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
+      parameters:
+          use_local_topics: true
 
     can_controller:
-      type: forward_command_controller/ForwardCommandController
-
-    
+      type: forward_command_controller/ForwardCommandController    
 
 
 

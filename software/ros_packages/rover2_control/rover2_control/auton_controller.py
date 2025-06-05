@@ -16,10 +16,8 @@ from dataclasses import dataclass
 #from rclpy.qos import QoSProfile, QoSReliabilityPolicy
 #from sensor_msgs.msg import Image
 #from cv_bridge import CvBridge
-import json
 from dataclasses import asdict
 import cv2
-#import bottle_detect
 
 @dataclass
 class Location:
@@ -30,9 +28,9 @@ class auton_controller(Node):
     state = "stopped"
     led_state = "green"
     
-    waypoint_destination = None
-    subpoints = None
-    curr_point_destination = None
+    # waypoint_destination = None
+    target_coordinate = None
+    # curr_point_destination = None
     latest_img_frame = None
     rover_position = Location(44.56726, -123.27363)
     current_heading = 0.0
@@ -44,8 +42,12 @@ class auton_controller(Node):
     target_turning_velocity = 0.0
     curr_turning_velocity = 0.0
     pause_time = None
+
     bottle_detector = None
     camera = None
+
+    # for the "drive forward for 2 seconds thing"
+    time_driving_forward = 0.0
 
     control_timer = None 
     vel_control_loop_timer = None
@@ -67,9 +69,10 @@ class auton_controller(Node):
         self.drive_publisher = self.create_publisher(DriveCommandMessage, 'command_control/ground_station_drive', 10)
         self.led_publisher = self.create_publisher(LED, 'autonomous_LED/color', 10)
         #self.publish_led_message(,0,0)
+        self.driving_angular = 0.0
 
         self.camera_timer = self.create_timer(0.05, self.camera_loop)
-        self.get_logger().info("Initialized")
+        self.get_logger().info("Auton controller initialized")
         
     def control_loop(self):
         if self.state == "stopped":
@@ -79,9 +82,7 @@ class auton_controller(Node):
             if self.vel_control_loop_timer is not None:
                 self.vel_control_loop_timer.cancel()
                 self.vel_control_loop_timer = None
-            self.subpoints = None
-            self.curr_point_destination = None
-            self.waypoint_destination = None
+            self.target_coordinate = None
             self.target_heading = None
             self.time_looking_for_item = None
             self.pause_time = None
@@ -98,47 +99,71 @@ class auton_controller(Node):
                 self.publish_log_msg("Reached target heading. Now driving")
                 self.state = "driving"
             else:
-                angular_speed = 0.4 # rad/s
+                angular_speed = 0.2 # rad/s
                 if heading_error > 0:
                     angular_speed *= -1
                 #if abs(heading_error) < 30: # slow down on approach
                     #angular_speed *= 0.6
+                self.get_logger().info("Angular is " + str(angular_speed))
                 self.publish_drive_message(0.0, angular_speed) 
 
         elif self.state == "driving":
-            self.target_heading = geographic_functions.get_target_heading(self.rover_position, self.curr_point_destination)
-            distance_to_nearest_point = geographic_functions.get_distance_to_location(self.rover_position, self.curr_point_destination)
-            distance_to_waypoint = geographic_functions.get_distance_to_location(self.rover_position, self.waypoint_destination)
-            curvature = geographic_functions.compute_curvature(self.curr_point_destination, self.get_heading_error())
+            self.target_heading = geographic_functions.get_target_heading(self.rover_position, self.target_coordinate)
+            #distance_to_nearest_point = geographic_functions.get_distance_to_location(self.rover_position, self.curr_point_destination)
+            distance_to_waypoint = geographic_functions.get_distance_to_location(self.rover_position, self.target_coordinate)
+            curvature = geographic_functions.compute_curvature(self.rover_position, self.target_coordinate, self.get_heading_error())
 
 
-            if distance_to_nearest_point < 9.0:
-                self.set_next_dest()
-                if self.curr_point_destination is None:
-                    # send message to unity
-                    # maybe get back the FIND command
-                    self.state = "stopped"
-                    self.get_logger().info("Reached destination. Stopping...")
-                    self.publish_log_msg("stopped")
-                    return
-            elif distance_to_nearest_point < 13.0:
-                self.publish_log_msg("getting_close")
+            # if distance_to_waypoint < 9.0:
+            #     self.set_next_dest()
+            #     if self.curr_point_destination is None:
+            #         # send message to unity
+            #         # maybe get back the FIND command
+            #         self.state = "stopped"
+            #         self.get_logger().info("Reached destination. Stopping...")
+            #         self.publish_log_msg("stopped")
+            #         return
+            # elif distance_to_waypoint < 13.0:
+            #     self.get_logger().info("getting_close")
+            #     self.publish_log_msg("getting_close")
 
-            linear = 0.65
-            angular = -curvature * linear * 1.7
-            if angular > 0.6:
-                angular = 0.6
-            elif angular < -0.6:
-                angular = -0.6
+            heading_error = abs(self.target_heading - self.current_heading + 180.0) % 360.0 - 180.0
+            if heading_error < 2.1:
+                self.get_logger().info(f"Heading error is <2.1 deg")
+                heading_error = 0.0
+            heading_error_percent = heading_error / 30.0 # if 30 deg off from target, reach max angular velocity
+
+            if heading_error_percent > 1.0:
+                heading_error_percent = 1.0
+            if self.target_heading > self.current_heading:
+                heading_error_percent *= -1.0
+            self.get_logger().info(f"Heading error % is {heading_error_percent * 100.0}")
             
-            log1 = "Driving. Dist to target: " + f"{distance_to_nearest_point:.0f}. Curv: " + f"{curvature:0.1f}" + ". Angular: " + str(angular) + ". "
+            max_angular = 0.2
+            # convert heading error to a percentage
+            angular = heading_error_percent * max_angular
+
+            linear = 0.35
+            if angular > 0.2:
+                angular = 0.2
+            elif angular < -0.2:
+                angular = -0.2
+
+            if abs(abs(self.driving_angular) - abs(angular)) >= 0.03:
+                #  difference between current and target angular velocities must be >= .03 %
+                if self.driving_angular < angular:
+                    self.driving_angular += .02
+                elif self.driving_angular > angular:
+                    self.driving_angular -= .02
+            
+            
+            log1 = "Driving. Dist to target: " + f"{distance_to_waypoint:.0f}. Angular: " + str(angular) + ". "
             heading_log = "Target H: " + f"{self.target_heading:.1f}, " + "Current H: " + f"{self.current_heading:.1f}"
             self.get_logger().info(log1 + heading_log)
-            self.publish_drive_message(linear, angular)
+            self.publish_drive_message(linear, self.driving_angular)
         
         elif self.state == "scanning":
             # turn until an aruco tag is found
-            self.get_logger().info(f"Scanning for {self.item_searching_for}...")
             if self.vel_control_loop_timer is None:
                 self.vel_control_loop_timer = self.create_timer(0.1, self.vel_control_loop)
 
@@ -148,14 +173,14 @@ class auton_controller(Node):
 
             if self.time_looking_for_item is None:
                 self.time_looking_for_item = 0.0
-            if self.time_looking_for_item >= 10.0:
+            if self.time_looking_for_item >= 11.0:
                 self.get_logger().info(f"Timed out looking for a(n) {self.item_searching_for}")
                 self.state = "stopped"
                 return
             
             item_location_in_img = None
             width = None
-            if self.item_searching_for == "ARUCO":
+            if self.item_searching_for == "aruco":
                 item_location_in_img, width = aruco_scan.detect_first_aruco_marker(self, self.latest_img_frame)
             # elif self.item_searching_for == "bottle":
             #     item_location_in_img, width = self.bottle_detector.get_bottle(self.latest_img_frame)
@@ -177,7 +202,7 @@ class auton_controller(Node):
                 angular_vel = 0.0
                 if self.pause_time is not None:
                     if self.pause_time >= 1.0:
-                        self.state = "driving to item"
+                        self.state = "stopped"
                         self.get_logger().info(f"Now driving to {self.item_searching_for}")
                         self.vel_control_loop_timer.cancel()
                         self.vel_control_loop_timer = None
@@ -200,18 +225,20 @@ class auton_controller(Node):
         elif self.state == "driving to item":
             linear_vel = 0.3
             angular = 0.0
-            item_location_in_img, width = None
-            if self.item_searching_for == "ARUCO":
+            item_location_in_img, width = None, None
+            if self.item_searching_for == "aruco":
                 item_location_in_img, width = aruco_scan.detect_first_aruco_marker(self, self.latest_img_frame)
             # elif self.item_searching_for == "bottle":
             #     item_location_in_img, width = self.bottle_detector.get_bottle(self.latest_img_frame)
 
             if item_location_in_img == None:
                 self.get_logger().info(f"Lost the {self.item_searching_for}")
-                self.state == "scanning"
+                self.state = "scanning"
                 return
             
             width_threshold = 0.16
+            # width_threshold is used for determining when the item is so big in the image
+            # that the rover should stop
             if self.item_searching_for == "bottle":
                 width_threshold = 0.12
             if width > width_threshold:
@@ -238,7 +265,17 @@ class auton_controller(Node):
 
             msg = f"Driving towards {self.item_searching_for}. Location: {item_location_in_img:.2f}. Width: {width:0.2f}. Angular: {angular:.2f}"
             self.get_logger().info(msg)
-            # self.publish_drive_message(linear_vel, angular) 
+            self.publish_drive_message(linear_vel, angular) 
+
+        elif self.state == "drive_forward":
+            self.time_driving_forward += 0.1
+            self.get_logger().info(f"Driving forward for {self.time_driving_forward} sec")
+            self.publish_drive_message(0.25, 0.0)
+
+            if self.time_driving_forward > 2.0:
+                self.get_logger().info(f"Stopping")
+                self.state = "stopped"
+                self.time_driving_forward = 0.0
 
     def vel_control_loop(self):
         if self.curr_turning_velocity < self.target_turning_velocity:
@@ -261,33 +298,42 @@ class auton_controller(Node):
             return
 
         command = parts[0]
+        self.driving_angular = 0.0
 
         if command == "GOTO":
             lat = float(parts[1])
             lon = float(parts[2])
-            self.get_logger().info(f"Command GOTO received with target lat: {lat}, lon: {lon}")
-            self.waypoint_destination = Location(lat, lon)
+            turn = parts[3]
+            self.get_logger().info(f"GOTO received with target lat: {lat}, lon: {lon}, {turn}")
+            self.target_coordinate = Location(lat, lon)
             self.publish_led_message(255, 0, 0)
-            if self.state != "driving":
+            if turn == "True":
                 self.state = "turning"
-                if self.led_timer is not None:
-                    self.led_timer.cancel()
-                    self.led_timer = None
-                
-                if self.control_timer is None:
-                    self.control_timer = self.create_timer(0.1, self.control_loop)
+            else:
+                self.state = "driving"
+
+            if self.led_timer is not None:
+                self.led_timer.cancel()
+                self.led_timer = None
             
-            self.target_heading = geographic_functions.get_target_heading(self.rover_position, self.waypoint_destination)
-            self.subpoints = geographic_functions.get_points_along_line(self.rover_position, self.waypoint_destination, self.target_heading)
-            msg = "subpoints;" + json.dumps([asdict(loc) for loc in self.subpoints])
-            self.publish_log_msg(msg)
-            self.set_next_dest()
+            if self.control_timer is None:
+                self.control_timer = self.create_timer(0.1, self.control_loop)
+            
+            self.target_heading = geographic_functions.get_target_heading(self.rover_position, self.target_coordinate)
+            #self.subpoints = geographic_functions.get_points_along_line(self.rover_position, self.waypoint_destination, self.target_heading)
+            #msg = "subpoints;" + json.dumps([asdict(loc) for loc in self.subpoints])
+            #self.publish_log_msg(msg)
+            #self.set_next_dest()
         elif command == "FIND":
+            # for finding water bottle, hammer, aruco tag, etc.
             self.item_searching_for = parts[1]
             self.state = "scanning"
             self.get_logger().info(f"Finding " + self.item_searching_for)
             if self.control_timer is None:
                 self.control_timer = self.create_timer(0.1, self.control_loop)
+        elif command == "DRIVEFORWARD":
+            self.get_logger().info("Command received: Drive forward for 2 seconds")
+            self.state = "drive_forward"
         elif command == "STOP":
             self.get_logger().info("STOP command received. Stopping autonomous navigation.")
             self.publish_led_message(0, 0, 255)
@@ -347,25 +393,25 @@ class auton_controller(Node):
             error += 360
         return error
     
-    def set_next_dest(self):
-        if self.subpoints is not None and len(self.subpoints) > 0:
-            self.curr_point_destination = self.subpoints[0]
-            self.subpoints.pop(0)
-        elif self.curr_point_destination != self.waypoint_destination:
-            self.curr_point_destination = self.waypoint_destination
-        else:
-            self.curr_point_destination = None
-        self.get_logger().info("Set new dest: " + str(self.curr_point_destination))
-        if self.curr_point_destination is not None:
-            self.publish_log_msg("nextdest;" + str(self.curr_point_destination.latitude) + ";" + str(self.curr_point_destination.longitude))
+    # def set_next_dest(self):
+    #     if self.subpoints is not None and len(self.subpoints) > 0:
+    #         self.curr_point_destination = self.subpoints[0]
+    #         self.subpoints.pop(0)
+    #     elif self.curr_point_destination != self.waypoint_destination:
+    #         self.curr_point_destination = self.waypoint_destination
+    #     else:
+    #         self.curr_point_destination = None
+    #     self.get_logger().info("Set new dest: " + str(self.curr_point_destination))
+    #     if self.curr_point_destination is not None:
+    #         self.publish_log_msg("nextdest;" + str(self.curr_point_destination.latitude) + ";" + str(self.curr_point_destination.longitude))
     
     def imu_heading_listener_callback(self, msg):
         """Listens to auton_control topic for commands"""
         self.current_heading = msg.data
-        if self.current_heading > 360.0:
-            self.current_heading -= 360.0
-        elif self.current_heading < 0.0:
-            self.current_heading += 360.0
+        # if self.current_heading > 360.0:
+        #     self.current_heading -= 360.0
+        # elif self.current_heading < 0.0:
+        #     self.current_heading += 360.0
         #self.get_logger().info(f"Received heading: " + str(self.current_heading))
 
     def gps_listener_callback(self, msg):

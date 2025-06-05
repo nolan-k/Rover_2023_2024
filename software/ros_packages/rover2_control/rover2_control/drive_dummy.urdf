@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot name="simple_rover_drive">
 
-  <!-- Base Link -->
-  <link name="base_link"/>
 
   <!-- Wheel Links -->
   <link name="front_left_wheel"/>
