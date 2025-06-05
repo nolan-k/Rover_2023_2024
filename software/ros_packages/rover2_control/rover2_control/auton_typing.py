@@ -43,7 +43,7 @@ class GripperMoveNode(Node):
             10)
         self.keyboard_offsets = {
             "q" : [0.05,0.0,0.0],
-            "w" : [-0.05, 0.0, 0.0],
+            "w" : [-0.2, 0.0, 0.0],
         }
         self.keyboard_offsets = self.make_pose(self.keyboard_offsets)
         #self.get_logger().info(self.keyboard_offsets)
@@ -82,9 +82,9 @@ class GripperMoveNode(Node):
         new_dict = {}
         for key, val in offset_dict.items():
             pose = Pose()
-            pose.position.x = val.position.x
-            pose.position.y = val.position.y
-            pose.position.z = val.position.z
+            pose.position.x = val.position.x * -1
+            pose.position.y = val.position.y * -1
+            pose.position.z = val.position.z * -1
             pose.orientation.x = 0.0
             pose.orientation.y = 0.0
             pose.orientation.z = 0.0
@@ -121,126 +121,11 @@ class GripperMoveNode(Node):
         for key_input in self.command:
             self.get_logger().info(f"what is key {key_input}")
             if key_input in self.keyboard_offsets:
-                # # Create a motion planning request
-                # motion_request = MotionPlanRequest()
-                # motion_request.workspace_parameters.header.frame_id = self.reference_frame
-                # motion_request.workspace_parameters.header.stamp = self.get_clock().now().to_msg()
-                
-                # # Set the planning group
-                # motion_request.group_name = "rover_arm"
-                
-                # # Set start state to the current state
-                # motion_request.start_state = RobotState()
-                # motion_request.start_state.joint_state.header = self.latest_joint_state.header
-                # motion_request.start_state.joint_state.name = self.latest_joint_state.name
-                # motion_request.start_state.joint_state.position = self.latest_joint_state.position
-                # motion_request.start_state.joint_state.velocity = self.latest_joint_state.velocity
-                
-                # #get current pose
-                # self.get_pose()
-
-                # #Set target pose
-                # target_pose = self.keyboard_offsets[key_input]
-                # pose = PoseStamped()
-                # pose.header.frame_id = self.reference_frame
-                # pose.pose = self.add_pose_position(target_pose, self.current_pose.pose)
-                # pose.pose.orientation = self.current_pose.pose.orientation
-                # self.get_logger().info(f"{pose.pose.position}")
-                # #set planning params
-                # motion_request.max_velocity_scaling_factor = 0.5
-                # motion_request.max_acceleration_scaling_factor = 0.5
-                # motion_request.allowed_planning_time = 5.0
-                # motion_request.num_planning_attempts = 10
-
-                # motion_request.goal_constraints = [Constraints()]
-                # #motion_request.path_constraints = [Constraints()]
-
-                # #create position contraint
-                # pose_constraint = PositionConstraint()
-                # pose_constraint.header.frame_id = pose.header.frame_id
-                # pose_constraint.link_name = self.target_frame
-                # pose_constraint.target_point_offset.x = 0.0
-                # pose_constraint.target_point_offset.y = 0.0
-                # pose_constraint.target_point_offset.z = 0.0
-
-                # #create bounding box: target point must lie with in (thus accuracy)
-                # bounding_volume = BoundingVolume()
-
-                # # Ccreate box
-                # box = SolidPrimitive()
-                # box.type = SolidPrimitive.BOX
-                # box.dimensions = [0.005, 0.005, 0.005]  
-
-                # # Assign the primitive to bounding volume
-                # bounding_volume.primitives.append(box)
-                # bounding_volume.primitive_poses. append(pose.pose)
-
-
-                # pose_constraint.constraint_region = bounding_volume
-                
-                # #set importance of the constraint
-                # pose_constraint.weight = 1.0
-
-                # #set planning
-                # # Create planning options
-                # planning_options = PlanningOptions()
-                # planning_options.plan_only = False  # Set to True if you only want to plan without execution
-                # planning_options.look_around = False
-                # planning_options.replan = True
-                # planning_options.replan_attempts = 5
-                # #planning_options.replan_delay = Duration(sec=2, nanosec=0)
-                
-                # # Create orientation constraint
-                # orientation_constraint = OrientationConstraint()
-                # orientation_constraint.header.frame_id = self.reference_frame
-                # orientation_constraint.link_name = self.target_frame
-                # orientation_constraint.orientation = self.current_pose.pose.orientation
-                # orientation_constraint.absolute_x_axis_tolerance = 0.01
-                # orientation_constraint.absolute_y_axis_tolerance = 0.01
-                # orientation_constraint.absolute_z_axis_tolerance = 0.01
-                # orientation_constraint.weight = 1.0
-                
-                # #Add goal constraint
-                # motion_request.goal_constraints[0].position_constraints.append(pose_constraint)
-                # motion_request.goal_constraints[0].orientation_constraints.append(orientation_constraint)
-
-                # #Create Path constraint
-                # path_constraint = PositionConstraint()
-                # path_constraint.header.frame_id = "base_link"  # or your world frame
-                # path_constraint.link_name = self.target_frame
-                # path_constraint.target_point_offset.x = 0.0
-                # path_constraint.target_point_offset.y = 0.0
-                # path_constraint.target_point_offset.z = 0.0
-                # path_constraint.weight = 1.0
-
-                # # Define a very thin box in Z to constrain to XY plane at current Z
-                # box = SolidPrimitive()
-                # box.type = SolidPrimitive.BOX
-                # box.dimensions = [2.0, 2.0, 0.01]  # large XY, thin Z
-
-                # box_pose = Pose()
-                # box_pose.position.x = self.current_pose.pose.position.x
-                # box_pose.position.y = self.current_pose.pose.position.y
-                # box_pose.position.z = self.current_pose.pose.position.z  # Z-plane to stay in
-                # box_pose.orientation.w = 1.0
-
-                # bounding_volume = BoundingVolume()
-                # bounding_volume.primitives.append(box)
-                # bounding_volume.primitive_poses.append(box_pose)
-
-                # #path_constraint.constraint_region = bounding_volume
-
-                # #apply path constraint
-                # #motion_request.path_constraints[0].position_constraints.append(path_constraint)
-
-
-                # # Create the goal message
-                # goal_msg = MoveGroup.Goal()
-                # goal_msg.request = motion_request
-                # goal_msg.planning_options = planning_options
                 goal_msg = self.setup_params(self.keyboard_offsets, key_input)
-
+                #self.get_logger().info(f"{goal_msg.request.start_state}")
                 #Send goal
+                #self.get_logger().info(f"Goal request 1: {goal_msg.request.goal_constraints}")
+
                 while not self.succeed:
                     self.send_goal(goal_msg, key_input)
                     while not self.is_done:
@@ -262,16 +147,22 @@ class GripperMoveNode(Node):
                     self.send_goal(goal_msg, "back")
                     while not self.is_done:
                         continue
+                self.is_done = False
                 self.succeed = False
-                self.succeed = False
+
+                #self.get_logger().info("inverse")
+                #self.get_logger().info(f"Previous Current Pose: {self.current_pose}")
 		
-		
+                goal_msg = self.setup_params(self.keyboard_offsets_inverse, key_input)
+                #self.get_logger().info(f"Goal Request 2: {goal_msg.request.goal_constraints}")
                 while not self.succeed:
+                    #self.get_logger().info(f"{self.succeed}")
                     self.send_goal(goal_msg, key_input)
                     while not self.is_done:
                         continue
                 self.succeed = False
                 self.is_done = False
+                self.get_logger().info("Done with commands")
 
                 # i -= 1
                 # if i <= 0:
@@ -284,16 +175,17 @@ class GripperMoveNode(Node):
 
     def send_goal(self, goal_msg, key_input):
          #Send goal
-        self.get_logger().info(f"Sending {key_input}")
+        #self.get_logger().info(f"Sending {key_input}")
         send_goal_future = self.move_group_client.send_goal_async(goal_msg)
-        self.get_logger().info("sent")
+        #self.get_logger().info("sent")
         send_goal_future.add_done_callback(self.moving_callback)
         while not self.is_done:
             rclpy.spin_once(self)
-        self.get_logger().info("callback added")
+        #self.get_logger().info("callback added")
+        #self.get_logger().info(f"{self.succeed}")
     
     def moving_callback(self, future):
-        self.get_logger().info("in call back")
+        #self.get_logger().info("in call back")
         goal_handle = future.result()
         if not goal_handle.accepted:
             self.get_logger().error('Goal was rejected!')
@@ -304,18 +196,22 @@ class GripperMoveNode(Node):
         # Get the result
         result_future = goal_handle.get_result_async()
         result_future.add_done_callback(self.get_result_callback)
+        while not self.is_done:
+            rclpy.spin_once(self)
+        self.get_logger().info(f"{self.succeed}")
 
     
     def get_result_callback(self, future):
         result_handle = future.result()
         status = future.result().status
-        
+        self.get_logger().info(f"{status}")
         if status == 4:  # Succeeded
             self.get_logger().info('Motion execution succeeded!')
             self.succeed = True
         else:
             self.get_logger().error(f'Motion execution failed with status: {status}')
         self.is_done = True
+        #self.get_logger().info(f"{self.succeed}")
         
 
     def get_pose(self):
@@ -334,7 +230,7 @@ class GripperMoveNode(Node):
             self.current_pose.pose.orientation = trans.transform.rotation
 
             # Now you have the current gripper pose
-            self.get_logger().info(f"Gripper pose: {self.current_pose.pose}")
+            #self.get_logger().info(f"Gripper pose: {self.current_pose.pose}")
         except Exception as e:
             self.get_logger().error(f"Failed to lookup gripper pose: {str(e)}")
 
@@ -358,6 +254,7 @@ class GripperMoveNode(Node):
                 
                 # Set the planning group
                 motion_request.group_name = "rover_arm"
+                motion_request.planner_id = "PTP"
                 
                 # Set start state to the current state
                 motion_request.start_state = RobotState()
@@ -371,6 +268,7 @@ class GripperMoveNode(Node):
 
                 #Set target pose
                 target_pose = key_dict[key_input]
+                #self.get_logger().info(f"Target Pose: {target_pose}")
                 pose = PoseStamped()
                 pose.header.frame_id = self.reference_frame
                 pose.pose = self.add_pose_position(target_pose, self.current_pose.pose)
@@ -381,9 +279,10 @@ class GripperMoveNode(Node):
                 motion_request.max_acceleration_scaling_factor = 0.5
                 motion_request.allowed_planning_time = 5.0
                 motion_request.num_planning_attempts = 10
+                motion_request._pipeline_id = "pilz_industrial_motion_planner"
 
                 motion_request.goal_constraints = [Constraints()]
-                #motion_request.path_constraints = [Constraints()]
+                motion_request.path_constraints = Constraints()
 
                 #create position contraint
                 pose_constraint = PositionConstraint()
@@ -446,11 +345,11 @@ class GripperMoveNode(Node):
                 # Define a very thin box in Z to constrain to XY plane at current Z
                 box = SolidPrimitive()
                 box.type = SolidPrimitive.BOX
-                box.dimensions = [2.0, 2.0, 0.01]  # large XY, thin Z
+                box.dimensions = [2.0, 1.0, 2.0]  # large xz, thin y
 
                 box_pose = Pose()
                 box_pose.position.x = self.current_pose.pose.position.x
-                box_pose.position.y = self.current_pose.pose.position.y
+                box_pose.position.y = self.current_pose.pose.position.y - box.dimensions[1] / 2 + 0.001
                 box_pose.position.z = self.current_pose.pose.position.z  # Z-plane to stay in
                 box_pose.orientation.w = 1.0
 
@@ -458,11 +357,11 @@ class GripperMoveNode(Node):
                 bounding_volume.primitives.append(box)
                 bounding_volume.primitive_poses.append(box_pose)
 
-                #path_constraint.constraint_region = bounding_volume
+                path_constraint.constraint_region = bounding_volume
 
                 #apply path constraint
-                #motion_request.path_constraints[0].position_constraints.append(path_constraint)
-
+                motion_request.path_constraints.position_constraints.append(path_constraint)
+                #motion_request.path_constraints.orientation_constraints.append(orientation_constraint)
 
                 # Create the goal message
                 goal_msg = MoveGroup.Goal()
