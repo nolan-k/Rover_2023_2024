@@ -210,6 +210,7 @@ class GripperMoveNode(Node):
             self.succeed = True
         else:
             self.get_logger().error(f'Motion execution failed with status: {status}')
+            self.succeed = True
         self.is_done = True
         #self.get_logger().info(f"{self.succeed}")
         
@@ -273,7 +274,8 @@ class GripperMoveNode(Node):
                 pose.header.frame_id = self.reference_frame
                 pose.pose = self.add_pose_position(target_pose, self.current_pose.pose)
                 pose.pose.orientation = self.current_pose.pose.orientation
-                self.get_logger().info(f"{pose.pose.position}")
+                self.get_logger().info(f"Current: {self.current_pose.pose.position}")
+                self.get_logger().info(f"Goal: {pose.pose.position}")
                 #set planning params
                 motion_request.max_velocity_scaling_factor = 0.5
                 motion_request.max_acceleration_scaling_factor = 0.5
@@ -360,7 +362,7 @@ class GripperMoveNode(Node):
                 path_constraint.constraint_region = bounding_volume
 
                 #apply path constraint
-                motion_request.path_constraints.position_constraints.append(path_constraint)
+                #motion_request.path_constraints.position_constraints.append(path_constraint)
                 #motion_request.path_constraints.orientation_constraints.append(orientation_constraint)
 
                 # Create the goal message
