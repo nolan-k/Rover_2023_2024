@@ -136,9 +136,9 @@
       </geometry>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="-0.038106 0.015875 0.14921"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/> <!-- (-0.038106 0.015875 0.14921) 2021 old gripper-->
       <geometry>
-        <mesh filename="package://rover_arm_urdf/urdf/stl_files/arm_gripper.stl"/>
+        <mesh filename="package://rover_arm_urdf/urdf/stl_files/arm_1819_gripper.stl" scale="0.001 0.001 0.001"/> <!--Get rid of scale for 2021 old griper-->
       </geometry>
     </collision>
     <inertial>
