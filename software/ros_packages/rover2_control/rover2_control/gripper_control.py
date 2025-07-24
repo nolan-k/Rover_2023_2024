@@ -15,8 +15,10 @@ class GripperCanControl(Node):
 
         self.last_message_time = time()
         
-        self.is_position_control = False
-        self.joy_publish_rate = 30 #hz
+        self.declare_parameter('is_position_control', False)
+        self.declare_parameter('joy_publish_rate', 30)
+        self.is_position_control = self.get_parameter('is_position_control').value
+        self.joy_publish_rate = self.get_parameter('joy_publish_rate').value
         #odrive params
         self.node_id = 6
         self.axis = 0
