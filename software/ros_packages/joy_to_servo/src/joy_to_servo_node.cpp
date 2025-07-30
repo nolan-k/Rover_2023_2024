@@ -86,15 +86,7 @@ bool convertJoyToCmd(const std::vector<float>& axes, const std::vector<int>& but
   else if(buttons[controllerMappings.BUTTON_MAP.at("CHANGE_VIEW")]){
     use_ik = true;
   }
-  printf("Slowdown: %f\n", slowdown);
 
-  if (buttons[controllerMappings.BUTTON_MAP.at("A")]){
-    if (slowdown == 1.0){
-      slowdown = 0.2;
-    } else {
-      slowdown = 1.0;
-    }
-  }
 
   if(use_ik){ //ik controls
     if (axes[controllerMappings.AXIS_MAP.at("D_PAD_Y")] || buttons[controllerMappings.BUTTON_MAP.at("LEFT_BUMPER")] || buttons[controllerMappings.BUTTON_MAP.at("RIGHT_BUMPER")])
