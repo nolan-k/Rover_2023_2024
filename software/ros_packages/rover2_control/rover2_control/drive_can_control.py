@@ -39,13 +39,13 @@ class DriveCanControlNode(Node):
             DriveCommandMessage,
             '/command_control/ground_station_drive',  # Topic where joy messages are published
             self.groundstation_drive_command_callback,
-            1
+            10
         )
         self.iris_sub = self.create_subscription(
             DriveCommandMessage,
             '/command_control/iris_drive',  # Topic where joy messages are published
             self.iris_drive_command_callback,
-            1
+            10
         )
 
         self.timer = self.create_timer(0.02, self.timer_callback)
@@ -77,12 +77,13 @@ class DriveCanControlNode(Node):
 
     def timer_callback(self):
         #Watchdog to make sure the drive doesn't spin out of control if connection is lost/messages stop being recieved
-        self.get_logger().info(f"Time: {time()}, Last Message Time: {self.last_message_time}")
+        #self.get_logger().info(f"Time: {time()}, Last Message Time: {self.last_message_time}")
         if time() >= self.last_message_time+2:    
             self.linear_velocity = 0.0  # Left joystick vertical axis (forward/backward)
             self.angular_velocity = 0.0  # Right joystick horizontal axis (turning)
-        
+            self.get_logger().info("hit watchdog")
         #This handles drivetrain saturation (sigmoid function), and control mixing
+        self.get_logger().info(f"linear vel: {self.linear_velocity} | angular velocity: {self.angular_velocity}")
         self.normalize_drive_commands()
 
     def normalize_drive_commands(self):
@@ -109,6 +110,7 @@ class DriveCanControlNode(Node):
     def groundstation_drive_command_callback(self, msg):
         # Map joystick axes to wheel velocities
         # Assume left stick y-axis for forward/backward and right stick x-axis for turning
+        self.get_logger().info(f"Recieved: Lin Vel: {msg.drive_twist.linear.x}, ang vel: {msg.drive_twist.angular.z}")
         if msg.controller_present:
             #Update the desired velocities
             self.linear_velocity = msg.drive_twist.linear.x  # Left joystick vertical axis (forward/backward)

@@ -22,10 +22,13 @@ class ScimechSensors(Node):
         self.ozone = 0.0
         self.temperature = 0.0
 
-        self.scimech_arduino = serial.Serial('/dev/ttyACM0',9600, timeout=1)
+        self.scimech_arduino = serial.Serial('/dev/ttyCH341USB0',115200, timeout=1)
         self.scimech_arduino.flush()
         self.timer = self.create_timer(timer_period, self.timer_callback)        
   
+        self.hydrogen_index = 0
+        self.ozone_index = 1
+        self.geiger_index = 2
 
     def read_scimech_serial_data(self):
         while True:
@@ -37,10 +40,9 @@ class ScimechSensors(Node):
                         data_array = line.split(",")
                         if(len(data_array)>1):
                         
-                            self.temperature = float(data_array[0])
-                            self.humidity = float(data_array[1])
-                            self.hydrogen = float(data_array[2])
-                            self.ozone = float(data_array[3])
+                            self.hydrogen = float(data_array[self.hydrogen_index])
+                            self.ozone = float(data_array[self.ozone_index])
+                            self.geiger = float(data_array[self.geiger_index])
                         self.scimech_arduino.flush()
                     
                 
@@ -52,12 +54,10 @@ class ScimechSensors(Node):
         
         self.read_scimech_serial_data()
         msg = Float32MultiArray()
-        msg.data = [self.humidity,self.hydrogen,self.ozone,self.temperature]
+        msg.data = [self.hydrogen,self.ozone,self.geiger]
         self.scimech_data_publisher_.publish(msg)
         self.logger.info('Publishing: "%s"' % msg.data)
-        with open("/home/makemorerobot/Rover_2023_2024/software/ros_packages/rover2_odometry/rover2_odometry/sensor_data.csv","a") as file:
 
-            file.write(f"{self.temperature},{self.humidity},{self.hydrogen},{self.ozone}\n")
 
 def main(args=None):
     rclpy.init(args=args)

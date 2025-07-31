@@ -116,6 +116,12 @@ def generate_launch_description():
         ),
         Node(
             package='rover2_control',
+            executable='monitor_aruco',
+            name='monitor_aruco',
+            **config
+        ),
+        Node(
+            package='rover2_control',
             executable='drill_control',
             name='drill_control',
             **config

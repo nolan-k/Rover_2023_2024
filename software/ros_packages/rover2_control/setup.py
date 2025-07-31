@@ -37,7 +37,8 @@ setup(
             'odrive_drive_control = rover2_control.odrive_drive_control:main',
             'drive_can_control = rover2_control.drive_can_control:main',
             'drill_control = rover2_control.drill_control:main',
-            'gripper_control = rover2_control.gripper_control:main'
+            'gripper_control = rover2_control.gripper_control:main',
+            'monitor_aruco = rover2_control.monitor_aruco:main'
         ],
     },
 )

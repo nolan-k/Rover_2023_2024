@@ -47,9 +47,9 @@ def generate_launch_description():
 			package='rover2_status',
             executable='drivetrain_telemetry',
         ),
-#	Node(
-#			package='rover2_status',
-#            executable='arm_telem',
-#        ),
+	Node(
+			package='rover2_status',
+            executable='arm_telem',
+        ),
 
     ])
