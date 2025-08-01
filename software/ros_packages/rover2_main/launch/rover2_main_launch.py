@@ -39,7 +39,7 @@ def generate_launch_description():
    return LaunchDescription([
       drive_control,
 #      cameras,
-      bridge,
+#      bridge,
       imu,
       arm,
       status

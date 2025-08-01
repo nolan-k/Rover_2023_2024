@@ -11,7 +11,7 @@ import struct
 MAX_ACCEL = 0.05
 
 GEAR_RATIO = 50
-RPS_FACTOR = 2
+RPS_FACTOR = 4
 #THIS SHOULD BE 2, 4.4 IS FOR THE SPEED LOL
 #RPS_FACTOR = 4.4
 BUS = can.interface.Bus("can0", interface="socketcan")
@@ -94,7 +94,6 @@ class DriveCanControlNode(Node):
         if time() >= self.last_message_time+2:    
             self.linear_velocity = 0.0  # Left joystick vertical axis (forward/backward)
             self.angular_velocity = 0.0  # Right joystick horizontal axis (turning)
-            self.get_logger().info("hit watchdog")
 
         #This handles drivetrain saturation, control mixing, and sending messages over CAN
         self.send_drive_commands()

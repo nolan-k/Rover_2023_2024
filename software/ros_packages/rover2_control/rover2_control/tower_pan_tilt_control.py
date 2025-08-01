@@ -128,7 +128,7 @@ class TowerPanTiltControl(Node):
                                                                 self.pan_tilt_control_subscriber_topic,
                                                                 self.pan_tilt_control_callback, 1)
 
-        self.tower_light_control_subscriber = self.create_subscription(LightControlMessage, self.tower_light_control_subscriber_topic,
+        self.tower_light_control_subscriber = self.create_subscription(UInt8, self.tower_light_control_subscriber_topic,
                                                                 self.tower_light_control_callback, 1)
 
         self.tower_gps_publisher = self.create_publisher(GPSStatusMessage, self.tower_gps_publisher_topic, 1)
@@ -227,7 +227,7 @@ class TowerPanTiltControl(Node):
 
     def send_tower_control_message(self):
         if self.new_tower_light_control_message:
-            self.tower_node.write_register(0, min(self.tower_light_control_message.light_mode, TOWER_LIGHT_STATES["LIGHT_LED"]))
+            self.tower_node.write_register(0, min(self.tower_light_control_message.data, TOWER_LIGHT_STATES["LIGHT_LED"]))
             self.new_tower_light_control_message = False
 
     def pan_tilt_control_callback(self, pan_tilt_control):

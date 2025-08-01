@@ -95,7 +95,7 @@ class OdriveTelemetry(Node):
 		
 		#Send the message:
 		#self.get_logger().info(f"{self.statuses}")
-		self.get_logger().info(f"can msgs read: {self.count}")
+		#self.get_logger().info(f"can msgs read: {self.count}")
 		self.count = 0
 		self.pub.publish(msg)
 

@@ -94,6 +94,7 @@ class GripperCanControl(Node):
 
         #odrive mode
         self.mode = 0 #current mode see set_mode() for Details
+        self.torq_timeout = 0.0
 
         #joy Mappings
         self.open_button = 1 
@@ -260,8 +261,8 @@ class GripperCanControl(Node):
                 case 2:
                     #Handle Current
                     if self.mode == 1:
-                        if abs(self.measured_vel) > 2.0 and abs(-self.torq_setpoint - self.feedback_torq_setpoint) < 0.0001: 
-                            self.get_logger().info(f"Velocity Measured: {self.measured_vel}")
+                        if abs(self.measured_vel) > 10.0 and abs(-self.torq_setpoint - self.feedback_torq_setpoint) < 0.0001 and abs(self.measured_current) < 2.0 and abs(self.torq_timeout - time()) < 0.25: 
+                            self.get_logger().info(f"Velocity Measured: {self.measured_vel} | current: {self.measured_current}")
                             self.send_torque(0.0)
                             self.set_mode(2)
                             self.send_velocity(0.0)
@@ -269,6 +270,7 @@ class GripperCanControl(Node):
                             self.send_torque(-self.torq_setpoint)
                     elif abs(self.measured_current) > self.current_threshold:
                         self.get_logger().info("at torque")
+                        self.torq_timeout = time()
                         self.set_mode(1)
                         if abs(-self.torq_setpoint - self.feedback_torq_setpoint) > 0.0001:
                             self.send_torque(-self.torq_setpoint)
@@ -409,13 +411,16 @@ class GripperCanControl(Node):
             torq : float
                 A torque set point. 
         """
-        self.bus.send(can.Message(
-            arbitration_id=(self.node_id << 5 | 0x0e),
-            data=struct.pack('<f', torq),
-            is_extended_id=False
-        ))
-        self.get_logger().info(f"sent torque: {torq}")
+        try:
 
+            self.bus.send(can.Message(
+                arbitration_id=(self.node_id << 5 | 0x0e),
+                data=struct.pack('<f', torq),
+                is_extended_id=False
+            ))
+            self.get_logger().info(f"sent torque: {torq}")
+        except:
+            self.get_logger().info("CAN Buffer full")
 
     def send_velocity(self, vel, torq_ff = 0.0):
         """Send a velocity set point through can.
@@ -427,11 +432,16 @@ class GripperCanControl(Node):
             torq_ff : float, optional
                 The torque feed forward value.
         """
-        self.bus.send(can.Message(
-            arbitration_id=(self.node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
-            data=struct.pack('<ff', vel, torq_ff), # 1.0: velocity, 0.0: torque feedforward
-            is_extended_id=False
-        ))
+        try:
+        
+            self.bus.send(can.Message(
+                arbitration_id=(self.node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
+                data=struct.pack('<ff', vel, torq_ff), # 1.0: velocity, 0.0: torque feedforward
+                is_extended_id=False
+            ))
+        except:
+            self.get_logger().info("CAN Buffer full")
+        
         #self.get_logger().info(f"Sending Velocity: {vel}")  
         
     def send_position(self, pos, vel_ff = 0, torq_ff = 0):
@@ -446,13 +456,16 @@ class GripperCanControl(Node):
             torq_ff : int, optional
                 The torque feed forward value in 1/1000 Nm.
         """
-        self.bus.send(can.Message(
-            arbitration_id = (self.node_id << 5 | 0x0c),
-            data = struct.pack('<fhh', pos, vel_ff, torq_ff),
-            is_extended_id = False
-        ))
+        try:
+            self.bus.send(can.Message(
+                arbitration_id = (self.node_id << 5 | 0x0c),
+                data = struct.pack('<fhh', pos, vel_ff, torq_ff),
+                is_extended_id = False
+            ))
         #self.get_logger().info(f"sent position: {pos}")
-        self.pos_setpoint = pos
+            self.pos_setpoint = pos
+        except:
+            self.get_logger().info("CAN Buffer full")
     
     def send_gpio(self, pin, state):
         """Sends a can message to change a gpio pins state
@@ -465,12 +478,14 @@ class GripperCanControl(Node):
                 The state to set. 
         """
         if True:
-            self.bus.send(can.message(
-                arbitration_id = (self.node_id << 5 | 0x04),
-                data = struct.pack('BHBI?', 1, 653, 0, pin, state),
-                is_extended_id = False
-            ))
-
+            try:
+                self.bus.send(can.message(
+                    arbitration_id = (self.node_id << 5 | 0x04),
+                    data = struct.pack('BHBI?', 1, 653, 0, pin, state),
+                    is_extended_id = False
+                ))
+            except:
+                self.get_logger().info("CAN Buffer full")
     def set_mode(self, mode):
         """Sets the desired control mode. 
         
@@ -482,123 +497,126 @@ class GripperCanControl(Node):
         """
         if self.mode != mode:
             self.get_logger().info(f"mode: {mode}")
-            match mode:
-                case 0:
-                    #Set Cloosed Loop control
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
-                        data=struct.pack('<I', 1), # 8: AxisState.IDLE
-                        is_extended_id=False
-                    ))
-                    self.mode = 0
+            try:
+                match mode:
+                    case 0:
+                        #Set Cloosed Loop control
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                            data=struct.pack('<I', 1), # 8: AxisState.IDLE
+                            is_extended_id=False
+                        ))
+                        self.mode = 0
 
-                case 1:
-                    #Set Cloosed Loop control
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
-                        data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
-                        is_extended_id=False
-                    ))
-                    ##set Torq control and passthrough
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0b), 
-                        data=struct.pack('<II', 1,1),
-                        is_extended_id=False
-                    ))
-                    self.mode = 1
-                case 2:
-                    #Set Cloosed Loop control
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
-                        data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
-                        is_extended_id=False
-                    ))
-                    #Set velocity ramp control mode
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0b), 
-                        data=struct.pack('<II', 2,2),
-                        is_extended_id=False
-                    ))
+                    case 1:
+                        #Set Cloosed Loop control
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                            data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
+                            is_extended_id=False
+                        ))
+                        ##set Torq control and passthrough
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0b), 
+                            data=struct.pack('<II', 1,1),
+                            is_extended_id=False
+                        ))
+                        self.mode = 1
+                    case 2:
+                        #Set Cloosed Loop control
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                            data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
+                            is_extended_id=False
+                        ))
+                        #Set velocity ramp control mode
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0b), 
+                            data=struct.pack('<II', 2,2),
+                            is_extended_id=False
+                        ))
 
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x04), 
-                        data=struct.pack('<BHBf', 1, 403,0, self.vel_ramp_rate), #403 - 0.6.10, 396 - 0.6.9-1
-                        is_extended_id=False
-                    ))
-                    self.mode = 2
-                case 3:
-                    #Set Cloosed Loop control
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
-                        data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
-                        is_extended_id=False
-                    ))
-                    #set command mode position, input mode trap_traj
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0b),
-                        data=struct.pack('<II', 3, 5),
-                        is_extended_id= False
-                    ))
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x04), 
+                            data=struct.pack('<BHBf', 1, 403,0, self.vel_ramp_rate), #403 - 0.6.10, 396 - 0.6.9-1
+                            is_extended_id=False
+                        ))
+                        self.mode = 2
+                    case 3:
+                        #Set Cloosed Loop control
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                            data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
+                            is_extended_id=False
+                        ))
+                        #set command mode position, input mode trap_traj
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0b),
+                            data=struct.pack('<II', 3, 5),
+                            is_extended_id= False
+                        ))
 
-                    #Traj Velo Limit
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x11),
-                        data=struct.pack('<f', self.vel_setpoint),
-                        is_extended_id= False
-                    ))
+                        #Traj Velo Limit
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x11),
+                            data=struct.pack('<f', self.vel_setpoint),
+                            is_extended_id= False
+                        ))
 
-                    #trap accel limit
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x12),
-                        data=struct.pack('<ff', self.accel_limit, self.deccel_limit),
-                        is_extended_id= False
-                    ))
+                        #trap accel limit
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x12),
+                            data=struct.pack('<ff', self.accel_limit, self.deccel_limit),
+                            is_extended_id= False
+                        ))
 
-                    #set vel and current limit
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0f),
-                        data=struct.pack('<ff', self.vel_limit, self.current_limit),
-                        is_extended_id = False
-                    ))
-                    self.mode = 3
-                case 4: 
-                    #Set Cloosed Loop control
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
-                        data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
-                        is_extended_id=False
-                    ))
-                    #set command mode position, input mode filtered_pos
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0b),
-                        data=struct.pack('<II', 3, 3),
-                        is_extended_id= False
-                    ))
-                    #set vel and current limit
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x0f),
-                        data=struct.pack('<ff', self.vel_limit, self.current_limit),
-                        is_extended_id = False
-                    ))
-                    #set bandwidth
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x04), 
-                        data=struct.pack('<BHBf', 1, 414,0, self.filter_bandwidth), 
-                        is_extended_id=False
-                    ))
-                    #set feedforward scale 0.6.10 vel = 252 torq = 253
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x04), 
-                        data=struct.pack('<BHBI', 1, 252,0, self.vel_scale),
-                        is_extended_id=False
-                    ))
+                        #set vel and current limit
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0f),
+                            data=struct.pack('<ff', self.vel_limit, self.current_limit),
+                            is_extended_id = False
+                        ))
+                        self.mode = 3
+                    case 4: 
+                        #Set Cloosed Loop control
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                            data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
+                            is_extended_id=False
+                        ))
+                        #set command mode position, input mode filtered_pos
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0b),
+                            data=struct.pack('<II', 3, 3),
+                            is_extended_id= False
+                        ))
+                        #set vel and current limit
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x0f),
+                            data=struct.pack('<ff', self.vel_limit, self.current_limit),
+                            is_extended_id = False
+                        ))
+                        #set bandwidth
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x04), 
+                            data=struct.pack('<BHBf', 1, 414,0, self.filter_bandwidth), 
+                            is_extended_id=False
+                        ))
+                        #set feedforward scale 0.6.10 vel = 252 torq = 253
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x04), 
+                            data=struct.pack('<BHBI', 1, 252,0, self.vel_scale),
+                            is_extended_id=False
+                        ))
 
-                    self.bus.send(can.Message(
-                        arbitration_id=(self.node_id << 5 | 0x04), 
-                        data=struct.pack('<BHBI', 1, 253,0, self.torq_scale), 
-                        is_extended_id=False
-                    ))
-                    self.mode = 4
+                        self.bus.send(can.Message(
+                            arbitration_id=(self.node_id << 5 | 0x04), 
+                            data=struct.pack('<BHBI', 1, 253,0, self.torq_scale), 
+                            is_extended_id=False
+                        ))
+                        self.mode = 4
+            except: 
+                self.get_logger().info("failed to change mode: Can buffer full?")
 
     #Define a callback for watching can messages:
     def read_can(self):
