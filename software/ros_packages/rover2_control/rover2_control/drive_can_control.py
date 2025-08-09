@@ -16,7 +16,7 @@ RPS_FACTOR = 4
 #RPS_FACTOR = 4.4
 BUS = can.interface.Bus("can0", interface="socketcan")
 
-VEL_RAMP = 4*GEAR_RATIO*RPS_FACTOR
+VEL_RAMP = GEAR_RATIO*RPS_FACTOR
 LEFT_NODES = [0,2,4]
 RIGHT_NODES = [1,3,5]
 NODES = [0,1,2,3,4,5]
@@ -99,7 +99,7 @@ class DriveCanControlNode(Node):
         self.send_drive_commands()
 
         #self.get_logger().info(f"Time: {time()}, Last Message Time: {self.last_message_time}")
-        self.get_logger().info(f"linear vel: {self.linear_velocity} | angular velocity: {self.angular_velocity}")
+        #self.get_logger().info(f"linear vel: {self.linear_velocity} | angular velocity: {self.angular_velocity}")
 
 
     #Callback function for Groundstation Drive commands.
@@ -157,13 +157,20 @@ class DriveCanControlNode(Node):
         left_command = -1 * (self.linear_velocity - self.angular_velocity) 
         right_command = (self.linear_velocity + self.angular_velocity)
 
-        #Normalize the speeds
+        #Otherwise Normalize the speeds
         #Copied from/Inspired by WPILib Differential Drive normalization
-        max_input = max(self.linear_velocity,self.angular_velocity)
-        saturation_factor = (self.linear_velocity+self.angular_velocity)/max_input
+        max_input = max(abs(self.linear_velocity),abs(self.angular_velocity))
+        
+        #Avoids div by 0 if 0 velocity is commanded
+        if (max_input != 0):
+            saturation_factor = (abs(self.linear_velocity) + abs(self.angular_velocity))/max_input
+            left_norm = left_command/saturation_factor
+            right_norm = right_command/saturation_factor
+        
+        else:
+            left_norm = 0
+            right_norm = 0
 
-        left_norm = left_command/saturation_factor
-        right_norm = right_command/saturation_factor
 
         #Scale the Drive speeds from unity accordingly
         left_velocity = RPS_FACTOR * GEAR_RATIO * left_norm

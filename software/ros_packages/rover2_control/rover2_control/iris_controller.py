@@ -167,7 +167,7 @@ class IrisController(Node):
     def broadcast_drive_if_current_mode(self):
         if self.registers[MODBUS_REGISTERS[REGISTER_STATE_MAPPING["DRIVE_VS_NEUTRAL_VS_ARM"]]] < SBUS_VALUES["SBUS_MID"] - SBUS_VALUES["SBUS_DEADZONE"]:
             command = DriveCommandMessage()
-            print("Drive command")
+            #print("Drive command")
             left_y_axis = self.registers[MODBUS_REGISTERS["LEFT_STICK_Y_AXIS"]]
             right_x_axis = self.registers[MODBUS_REGISTERS["RIGHT_STICK_X_AXIS"]]
             
@@ -198,7 +198,7 @@ class IrisController(Node):
     def broadcast_arm_if_current_mode(self):
         if self.registers[MODBUS_REGISTERS[REGISTER_STATE_MAPPING["DRIVE_VS_NEUTRAL_VS_ARM"]]] > \
                         SBUS_VALUES["SBUS_MID"] + SBUS_VALUES["SBUS_DEADZONE"]:
-            print("Arm")
+            #print("Arm")
 
 
            
@@ -243,7 +243,7 @@ class IrisController(Node):
                     self.sb_switch_toggle = False                
 
                 else:
-                    print("No input")
+                    #print("No input")
                     return    
                 
                 print(arm_pose)
@@ -257,8 +257,8 @@ class IrisController(Node):
                 right_y_axis = self.registers[MODBUS_REGISTERS["RIGHT_STICK_Y_AXIS"]]
                 left_x_axis = self.registers[MODBUS_REGISTERS["LEFT_STICK_X_AXIS"]]
                 right_x_axis = self.registers[MODBUS_REGISTERS["RIGHT_STICK_X_AXIS"]]
-                axes = [left_x_axis,left_y_axis, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-                buttons = [0]*16
+                axes = [left_x_axis,left_y_axis, right_y_axis if right_y_axis < SBUS_VALUES["SBUS_MID"]-SBUS_VALUES["SBUS_DEADZONE"] else 0.0, 0.0, 0.0, right_y_axis if right_y_axis > SBUS_VALUES["SBUS_MID"]+SBUS_VALUES["SBUS_DEADZONE"] else 0.0, 0.0, 0.0]
+                buttons = [0,1 if right_x_axis > SBUS_VALUES["SBUS_MID"]+SBUS_VALUES["SBUS_DEADZONE"]+50 else 0,1 if right_x_axis < SBUS_VALUES["SBUS_MID"]-SBUS_VALUES["SBUS_DEADZONE"] else 0,0,0,0,0,0,0,0,0,0,0,0,0,0]
                 difference = SBUS_VALUES["SBUS_MID"]-SBUS_VALUES["SBUS_MIN"]
                 for i in range(len(axes)):
                     if axes[i] != 0.0:
@@ -266,8 +266,9 @@ class IrisController(Node):
                         
                         if abs(axes[i]) < STICK_DEADZONE:
                             axes[i] = 0.0
-                if sum(axes) != 0.0:
-                    print(axes)
+                if sum(axes) != 0.0 or buttons[1] == 1 or buttons[2] == 1:
+                    axes[5] *= -1 #This is to make sure both behave in the (0,1) number range)
+                    print(buttons)
                     self.publish_joy_msg(axes,buttons)
                 #EMULATE JOY        
 

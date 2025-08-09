@@ -56,12 +56,12 @@ class SimplePosition(Node):
         distance_covered = 1.0 * self.current_speed
         geod = Geodesic.WGS84
 
-        self.get_logger().info(f"Current speed: {self.current_speed}. Current heading: {self.current_heading}")
+        #self.get_logger().info(f"Current speed: {self.current_speed}. Current heading: {self.current_heading}")
         new_pos = geod.Direct(self.current_latitude, self.current_longitude, self.current_heading, distance_covered)
         self.current_latitude = new_pos['lat2']
         self.current_longitude = new_pos['lon2']
 
-        self.get_logger().info(f'Distance covered: {distance_covered}. New lat: {self.current_latitude}, new lon: {self.current_longitude}')
+        #self.get_logger().info(f'Distance covered: {distance_covered}. New lat: {self.current_latitude}, new lon: {self.current_longitude}')
         ros_msg = String()
         ros_msg.data = str(self.current_latitude) + ";" + str(self.current_longitude)
         self.publisher.publish(ros_msg)
@@ -98,7 +98,7 @@ class SimplePosition(Node):
         self.current_heading = msg.data
 
     def drive_listener_callback(self, msg):
-        self.get_logger().info(f"Received twist, controller present = {msg.controller_present}")
+        #self.get_logger().info(f"Received twist, controller present = {msg.controller_present}")
         if msg.controller_present:
             speed = msg.drive_twist.linear.x * self.pwm_to_meter_per_sec_multiplier
             self.get_logger().info(f"Setting speed to {speed}")

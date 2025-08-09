@@ -13,7 +13,7 @@ class ScimechSensors(Node):
 
         self.scimech_data_publisher_ = self.create_publisher(Float32MultiArray, 'scimech/data', 10)
         
-        timer_period = 1  # seconds
+        timer_period = 0.033  # seconds
 
         self.logger = self.get_logger()
 

@@ -42,7 +42,7 @@ class monitor_aruco(Node):
             msg = Int32()
             msg.data = aruco_id
             self.pubs[label].publish(msg)
-            self.get_logger().info(f"[{label}] ArUco ID: {aruco_id}")
+            #self.get_logger().info(f"[{label}] ArUco ID: {aruco_id}")
 
     def detect_aruco_id(self, image):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

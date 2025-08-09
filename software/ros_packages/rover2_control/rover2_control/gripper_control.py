@@ -55,7 +55,7 @@ class GripperCanControl(Node):
         self.node_id = 6
         self.axis = 0
         self.laser_pin = 10
-        self.lights_pin = 10
+        self.lights_pin = 9
 
         #limits
         self.vel_limit = 60.0 #[rev/s]
@@ -99,8 +99,8 @@ class GripperCanControl(Node):
         #joy Mappings
         self.open_button = 1 
         self.close_button = 2
-        self.light_button = 11 #unset
-        self.laser_button = 12 #unset
+        self.light_button = 11
+        self.laser_button = 12 
 
         #joy states
         self.controller_state = 0 #controller state. See timer_callback_v2/joy_callback_v2 for Details
@@ -115,7 +115,7 @@ class GripperCanControl(Node):
         self.create_subscription(Joy, '/joy', self.joy_callback_v2, 1)
 
         #create time out timer
-        self.timer = self.create_timer(0.01, self.timer_callback_v2)
+        self.timer = self.create_timer(0.015, self.timer_callback_v2)
 
         #Initialize Odrive and Gripper position 
         self.get_logger().info("Starting Setup of Odrive")
@@ -245,7 +245,9 @@ class GripperCanControl(Node):
                 case 0:
                     if self.mode != 1:
                         self.set_mode(2)
-                        self.send_velocity(0.0)
+                        #don't continuously send 0
+                        if abs(self.measured_vel) > 0.001:
+                            self.send_velocity(0.0)
                 #open input state
                 case 1:
                     #don't go past home
@@ -356,10 +358,10 @@ class GripperCanControl(Node):
             self.controller_state = 0
         if buttons[self.light_button]:
             self.lights = not self.lights
-            #self.set_gpio(self.lights_pin, self.lights)
+            self.send_gpio(self.lights_pin, self.lights)
         if buttons[self.laser_button]:
             self.laser = not self.laser
-            #self.set_gpio(self.laser_pin, self.laser)
+            self.send_gpio(self.laser_pin, self.laser)
         if buttons[self.home_button]:
             self.get_logger().info("Re-Homing")
             self.found_home = False
@@ -478,14 +480,19 @@ class GripperCanControl(Node):
                 The state to set. 
         """
         if True:
-            try:
-                self.bus.send(can.message(
-                    arbitration_id = (self.node_id << 5 | 0x04),
-                    data = struct.pack('BHBI?', 1, 653, 0, pin, state),
-                    is_extended_id = False
-                ))
-            except:
-                self.get_logger().info("CAN Buffer full")
+            #try:
+            self.bus.send(can.Message(
+                arbitration_id = (self.node_id << 5 | 0x04),
+                data = struct.pack('<BHB', (7 << 2 | 1), 653, 1),
+                is_extended_id = False
+            ))
+            self.bus.send(can.Message(
+                arbitration_id=(self.node_id << 5 | 0x04),
+                data=struct.pack('<BBI?', (7 << 2 | 3), (1 << 4 | 1), pin, state),
+                is_extended_id=False
+            ))
+            #except:
+                #self.get_logger().info("CAN Buffer full")
     def set_mode(self, mode):
         """Sets the desired control mode. 
         
