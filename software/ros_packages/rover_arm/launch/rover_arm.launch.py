@@ -59,6 +59,14 @@ def generate_launch_description():
         'respawn': True
     }
 
+    octomap_config = {
+        'octomap_frame': 'base_link',
+        'octomap_resolution': 0.05,
+        'max_range': 5.0
+    }
+
+    octomap_sensor_config = load_yaml('rover_arm', 'config/sensors_3d.yaml')
+
     #ros2_control_hardware_type = LaunchConfiguration(ros2_control_hardware_type)
     moveit_config = (
         MoveItConfigsBuilder("rover_arm", package_name="rover_arm")
@@ -96,11 +104,8 @@ def generate_launch_description():
             planner_plugins,
             planner_configs,
             moveit_config.to_dict(),
-            {
-                "octomap_frame": "base_link",
-                "octomap_resolution" : 0.01,
-                "max_range" : 0.5,
-            },    
+            octomap_config,
+            octomap_sensor_config
         ],
         arguments=["--ros-args", "--log-level", "info"],
     )

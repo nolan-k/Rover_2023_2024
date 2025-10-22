@@ -1,12 +1,12 @@
 .idea
-<<<<<<< HEAD
 
 build
 install
 log
 __pycache__
-=======
+./react_groundstation
+
 .atsuo
->>>>>>> origin/SAM4S_firmware
+origin/SAM4S_firmware
 
 react_groundstation/node_modules
