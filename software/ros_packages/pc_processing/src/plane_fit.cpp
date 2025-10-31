@@ -141,7 +141,8 @@ private:
 		//assign them to a marker and publish
 		Marker plane_marker;
 
-		plane_marker.header.frame_id = "/quori/head_camera_optical";
+		//plane_marker.header.frame_id = "/quori/head_camera_optical"; //Old HW Rosbag Frame
+		plane_marker.header.frame_id = "/arm_gripper"; //Rover D405 Frame
 		plane_marker.header.stamp = rclcpp::Clock().now();
 
 		plane_marker.pose.position.x = 0;
