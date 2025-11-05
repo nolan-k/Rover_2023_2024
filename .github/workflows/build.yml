@@ -37,6 +37,6 @@ jobs:
           cp -R $GITHUB_WORKSPACE/* ~/ros_ws/src/
           cd ~/ros_ws
           rosdep install --from-paths src --ignore-src -r -y
-          source /opt/ros/humble/setup.sh
+          . /opt/ros/humble/setup.sh
           colcon build --packages-select auto_bot --cmake-args -DCMAKE_BUILD_TYPE=Release
-          source install/setup.sh
+          . install/setup.sh
