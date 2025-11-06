@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <joint name="lidar_joint" type="fixed">
-        <parent link="base_link"/>
+        <parent link="chassis"/>
         <child link="lidar_frame"/>
         <origin xyz="0.1 0 0.175" rpy="0 0 0"/>
     </joint>
@@ -27,7 +27,7 @@
         <material>Gazebo/Red</material>
         <sensor type="ray" name="lidar_sensor">
             <pose>0 0 0 0 0 0</pose>
-            <visualize>true</visualize>
+            <visualize>false</visualize>
             <update_rate>10.0</update_rate>
             <ray>
                 <scan>

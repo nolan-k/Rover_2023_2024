@@ -1,1 +1,0 @@
-/home/ryan/dev/work/dev_ws/src/auto_bot/launch/launch_sim.launch.py

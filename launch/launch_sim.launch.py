@@ -1,11 +1,11 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-
-
+from launch.event_handlers import OnProcessStart
+from launch.events import matches_action
 
 def generate_launch_description():
 
@@ -22,11 +22,26 @@ def generate_launch_description():
                     get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py')]),
              )
 
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py', arguments=['-topic', 'robot_description', '-entity', 'auto_bot'], output='screen')
+    spawn_entity = Node(
+        package='gazebo_ros', 
+        executable='spawn_entity.py', 
+        arguments=[
+            '-topic', 'robot_description', 
+            '-entity', 'auto_bot',
+        ], 
+        output='screen'
+    )
 
+    spawn_entity_event = RegisterEventHandler(
+        OnProcessStart(
+            target_action=matches_action(gazebo),  # ensures it triggers after Gazebo launch
+            on_start=[spawn_entity]
+        )
+    )
 
     return LaunchDescription([
         rsp,
         gazebo,
         spawn_entity,
+        #spawn_entity_event,
     ])

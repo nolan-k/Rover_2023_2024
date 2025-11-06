@@ -1,1 +1,0 @@
-/home/ryan/dev/work/dev_ws/src/auto_bot/build/auto_bot/ament_cmake_core/auto_botConfig-version.cmake
