@@ -4,8 +4,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-from launch.event_handlers import OnProcessStart
-from launch.events import matches_action
+from launch.event_handlers import OnProcessExit
 
 def generate_launch_description():
 
@@ -32,8 +31,40 @@ def generate_launch_description():
         output='screen'
     )
 
+   
+    diff_drive_controller_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['diff_drive_controller'],
+    )
+
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
+    )
+
+
+    delayed_ddc_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=spawn_entity,
+            on_exit=[diff_drive_controller_spawner]
+        )
+    )
+    delayed_jsb_spawner = RegisterEventHandler(
+         event_handler=OnProcessExit(
+             target_action=spawn_entity,
+             on_exit=[joint_state_broadcaster_spawner],
+         )
+    )
+
+
     return LaunchDescription([
         rsp,
         gazebo,
         spawn_entity,
+        #diff_drive_controller_spawner,
+        #joint_state_broadcaster_spawner,
+        delayed_ddc_spawner,
+        delayed_jsb_spawner,
     ])
