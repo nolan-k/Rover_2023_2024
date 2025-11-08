@@ -36,11 +36,17 @@ def generate_launch_description():
          get_package_share_directory('rover2_status'),
          'launch'), '/rover2_status_launch.py'])
       )
+   mapping = IncludeLaunchDescription(
+      PythonLaunchDescriptionSource([os.path.join(
+         get_package_share_directory('nav_autonomy'),
+         'launch'), '/mapping_launch.py'])
+      )
    return LaunchDescription([
       drive_control,
 #      cameras,
 #      bridge,
       imu,
       arm,
-      status
+      status,
+      mapping,
    ])
