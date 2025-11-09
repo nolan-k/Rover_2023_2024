@@ -1,0 +1,16 @@
+ros2__parameters:
+  rtabmap:
+    use_sime_time: True
+    frame_id: base_link
+    odometry_frame_id: odom
+    publish_tf: true
+    subscribe_depth: true
+    subscribe_rgbd: true
+    rgb_topic: /camera/color/image_raw
+    depth_topic: /camera/depth/image_rect_raw
+    camera_info_topic: /camera/color/camera_info
+    approx_sync: true
+    Rtabmap/PublishGrid: true
+    Grid/FromDepth: true
+    RGBD/PublishCloud: true
+

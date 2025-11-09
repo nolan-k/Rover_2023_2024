@@ -18,7 +18,7 @@ diff_drive_controller:
     use_stamped_vel: false
     wheel_separation: 0.35
     wheel_radius: 0.05
-    enable_odom_tf: true
+    enable_odom_tf: false
 
 #joint_state_broadcaster:
 #  ros__parameters:

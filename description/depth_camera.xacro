@@ -63,8 +63,6 @@
           <format>B8G8R8</format>
         </image>
         <clip>
-          <!-- <near>0.02</near> -->
-          <!-- <far>300</far> -->
           <near>0.02</near>
           <far>300</far>
         </clip>
@@ -79,18 +77,22 @@
         <ros></ros>
 
         <!-- Topics / frame -->
-        <camera_name>camera</camera_name>
+        <camera_name>camera_depth</camera_name>
+        <frame_name>camera_rgb_optical_frame</frame_name>
+        <!-- <image_topic_name>rgb/image</image_topic_name> -->
+        <!-- <depth_image_topic_name>depth/image</depth_image_topic_name> -->
+        <!-- <camera_info_topic_name>rgb/camera_info</camera_info_topic_name> -->
+        <!-- <point_cloud_topic_name>points</point_cloud_topic_name> -->
         <image_topic_name>image_raw</image_topic_name>
         <camera_info_topic_name>camera_info</camera_info_topic_name>
         <point_cloud_topic_name>points</point_cloud_topic_name>
-        <frame_name>camera_rgb_optical_frame</frame_name>
 
         <!-- useful plugin params you can tune -->
         <update_rate>30</update_rate>
         <always_on>true</always_on>
         <visualize>true</visualize>
         <min_depth>0.02</min_depth>
-        <max_depth>200</max_depth>
+        <max_depth>50.0</max_depth>
       </plugin>
     </sensor>
   </gazebo>
