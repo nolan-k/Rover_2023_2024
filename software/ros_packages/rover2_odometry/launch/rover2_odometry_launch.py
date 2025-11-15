@@ -32,6 +32,7 @@ def generate_launch_description():
             executable='odometry',
             name='odometry',
             **config
+<<<<<<< HEAD
         ),
         Node(
             package='rover2_odometry',
@@ -146,4 +147,7 @@ def generate_launch_description():
         ('/odometry/gps', '/odometry/gps'),    # GPS output topic
     ]
 ),
+=======
+        )
+>>>>>>> master
     ])

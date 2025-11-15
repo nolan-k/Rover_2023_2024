@@ -23,7 +23,11 @@ DEFAULT_IMU_TOPIC = "imu/data"
 DEFAULT_MAG_TOPIC = "imu/mag"
 IMU_HEADING_TOPIC = "imu/heading"
 
+<<<<<<< HEAD
 DEFAULT_HERTZ = 100  # Changed from 1000 to reasonable rate
+=======
+DEFAULT_HERTZ = 30
+>>>>>>> master
 
 #####################################
 # Mode Class Definition
