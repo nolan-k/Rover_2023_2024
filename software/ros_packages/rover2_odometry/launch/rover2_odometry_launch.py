@@ -32,7 +32,6 @@ def generate_launch_description():
             executable='odometry',
             name='odometry',
             **config
-<<<<<<< HEAD
         ),
         Node(
             package='rover2_odometry',
@@ -73,15 +72,15 @@ def generate_launch_description():
                 'odom0_relative': False,
                 
                 # GPS odometry (from navsat_transform)
-                'odom1': '/odometry/gps',
-                'odom1_config': [True,  True,  False,  # Use GPS x, y position
-                                False, False, False,
-                                False, False, False,
-                                False, False, False,
-                                False, False, False],
-                'odom1_queue_size': 10,
-                'odom1_differential': False,
-                'odom1_relative': False,
+#                'odom1': '/odometry/gps',
+#                'odom1_config': [True,  True,  False,  # Use GPS x, y position
+#                                False, False, False,
+#                                False, False, False,
+#                                False, False, False,
+#                                False, False, False],
+#                'odom1_queue_size': 10,
+#                'odom1_differential': False,
+#                'odom1_relative': False,
                 
                 # IMU (same as local)
                 'imu0': '/imu/data',
@@ -147,7 +146,4 @@ def generate_launch_description():
         ('/odometry/gps', '/odometry/gps'),    # GPS output topic
     ]
 ),
-=======
-        )
->>>>>>> master
     ])
