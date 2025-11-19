@@ -41,10 +41,7 @@ def generate_launch_description():
       imu,
       arm,
       status,
-<<<<<<< HEAD
-      mapping,
-=======
+#      mapping,
       cameras,
 
->>>>>>> master
    ])
