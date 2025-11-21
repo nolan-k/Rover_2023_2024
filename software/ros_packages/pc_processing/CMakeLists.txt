@@ -19,6 +19,7 @@ find_package(ament_cmake REQUIRED)
 find_package(PCL 1.3 REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(shape_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(pcl_ros REQUIRED)
 find_package(pcl_conversions REQUIRED)
@@ -26,6 +27,16 @@ find_package(rclcpp_components REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+#find_package(builtin_interfaces REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+
+#Generate the interfaces:
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/ResetObjects.srv"
+  #DEPENDENCIES buitltin_interfaces
+)
+
+
 
 # We need this to make the PCL stuff work.
 include_directories(${PCL_INCLUDE_DIRS})
@@ -35,13 +46,16 @@ add_definitions(${PCL_DEFINITIONS})
 # Add in the executables.
 add_executable(pc_filter src/pc_filter.cpp)
 target_link_libraries(pc_filter ${PCL_LIBRARIES})
-ament_target_dependencies(pc_filter rclcpp sensor_msgs pcl_ros pcl_conversions tf2_ros tf2_sensor_msgs geometry_msgs) #Include ros, sensor_msgs, pcl libraries as dependencies
+ament_target_dependencies(pc_filter rclcpp sensor_msgs pcl_ros pcl_conversions tf2_ros tf2_sensor_msgs geometry_msgs ) #Include ros, sensor_msgs, pcl libraries as dependencies
 
 add_executable(plane_fit src/plane_fit.cpp)
 target_link_libraries(plane_fit ${PCL_LIBRARIES})
-ament_target_dependencies(plane_fit rclcpp sensor_msgs pcl_ros pcl_conversions visualization_msgs)
+ament_target_dependencies(plane_fit rclcpp sensor_msgs pcl_ros pcl_conversions visualization_msgs shape_msgs)
 
 add_executable(count_objects src/count_objects.cpp)
+rosidl_get_typesupport_target(cpp_typesupport_target
+  ${PROJECT_NAME} rosidl_typesupport_cpp)
+target_link_libraries(count_objects "${cpp_typesupport_target}")
 target_link_libraries(count_objects ${PCL_LIBRARIES})
 ament_target_dependencies(count_objects rclcpp sensor_msgs visualization_msgs std_msgs pcl_ros pcl_conversions)
 

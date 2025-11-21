@@ -29,20 +29,20 @@ using std::placeholders::_1;
 
 // The idiom in C++ is the same as in Python; we create a class that
 // inherits from the ROS 2 Node class.
-class CountObjects : public rclcpp::Node {
+class FilterCloud : public rclcpp::Node {
 public:
 	
 	//Simplify the syntax by abstracting this namespace
 	using PointCloud2 = sensor_msgs::msg::PointCloud2;
 
 	//(I Think)This needs to be public because it's used to construct the class
-	CountObjects() : Node("pc_filter"),
+	FilterCloud() : Node("pc_filter"),
 		tf_buffer_(std::make_unique<tf2_ros::Buffer>(this->get_clock())),
 		tf_listener_(std::make_shared<tf2_ros::TransformListener>(*tf_buffer_)),
 		target_frame_("base_link") {
 		
 		//Subscribe to the rosbag stream
-		subscriber_ = this->create_subscription<PointCloud2>("raw_point_cloud", 5, std::bind(&CountObjects::sub_callback, this, _1));
+		subscriber_ = this->create_subscription<PointCloud2>("raw_point_cloud", 5, std::bind(&FilterCloud::sub_callback, this, _1));
 		
 		//Republish to:
 		publisher_ = this->create_publisher<PointCloud2>("truncated_point_cloud", 10);
@@ -72,12 +72,12 @@ private:
 		
 		//Remove the unneeded data using cropbox.
 		//Bounding points
-		float x_min = -2.0;
-		float x_max = 2.0;
-		float y_min = -2.0;
-		float y_max = 0.4;
-		float z_min = -1;
-		float z_max = 1;
+		float x_min = -0.5;
+		float x_max = 0.5;
+		float y_min = -0.5;
+		float y_max = 0.5;
+		float z_min = 0.2; //Exclude the gripper fingers
+		float z_max = 0.6;
 
 		//Create the cropbox filter:
 		pcl::CropBox<pcl::PointXYZRGB> box_filter;
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
 	rclcpp::init(argc, argv);
 
 	// Create a node instance and store a shared pointer to it.
-	auto node = std::make_shared<CountObjects>();
+	auto node = std::make_shared<FilterCloud>();
 
 	// Give control to ROS via the shared pointer.
 	rclcpp::spin(node);
