@@ -95,7 +95,7 @@ def generate_launch_description():
                 'imu0_remove_gravitational_acceleration': True,
             }],
             remappings=[
-                ('/odometry/filtered', '/odometry/global'),
+                ('/odometry/filtered', '/odom'),
             ]
         ),
         
