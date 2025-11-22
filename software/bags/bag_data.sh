@@ -6,6 +6,7 @@ fi
 
 ros2 bag record \
   -s mcap -o ~/Rover_2023_2024/software/bags/$1 \
+  /tf_static \
   /odometry/global \
   /odom \
   /imu/data \
