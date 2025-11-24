@@ -60,15 +60,50 @@ class OdrivePositionOdometry(Node):
         
         self.last_time = self.get_clock().now()
         self.initialized = False
+
+        # Counter to only publish every 2 updates (poor mans way of syncronizing and limiting hz)
+        self.update_count = 0
+
+        # Left and right wheel velocities
+        self.v_left = 0.0
+        self.v_right = 0.0
         
     def left_pos_callback(self, msg):
         """Update left wheel position"""
         self.left_pos = msg.data
+        self.update_count += 1
+
+        # Initialize on first callback
+        if not self.initialized:
+            if self.prev_left_pos is None:
+                self.prev_left_pos = self.left_pos
+
+        # Calculate wheel velocity
+        current_time = self.get_clock().now()
+        dt = (current_time - self.last_time).nanoseconds / 1e9
+        if dt == 0:
+            return
+        self.v_left = (self.left_pos - self.prev_left_pos) * self.wheel_circumference / dt
+
         self.calculate_odometry()
         
     def right_pos_callback(self, msg):
         """Update right wheel position"""
         self.right_pos = msg.data
+        self.update_count += 1
+
+        # Initialize on first callback
+        if not self.initialized:
+            if self.prev_right_pos is None:
+                self.prev_right_pos = self.right_pos
+
+        # Calculate wheel velocity
+        current_time = self.get_clock().now()
+        dt = (current_time - self.last_time).nanoseconds / 1e9
+        if dt == 0:
+            return
+        self.v_right = (self.right_pos - self.prev_right_pos) * self.wheel_circumference / dt 
+
         self.calculate_odometry()
         
     
@@ -77,21 +112,18 @@ class OdrivePositionOdometry(Node):
         
         # Initialize on first callback
         if not self.initialized:
-            if self.prev_left_pos is None:
-                self.prev_left_pos = self.left_pos
-            if self.prev_right_pos is None:
-                self.prev_right_pos = self.right_pos
-            
             if self.prev_left_pos is not None and self.prev_right_pos is not None:
                 self.initialized = True
                 self.get_logger().info('Odometry initialized')
             return
         
-        current_time = self.get_clock().now()
-        dt = (current_time - self.last_time).nanoseconds / 1e9
-        
-        if dt == 0:
+        # Wait until reciving 2 updates to push an odom update
+        if self.update_count >= 2:
+            self.update_count = 0
+        else:
             return
+        
+        current_time = self.get_clock().now()
         
         # Calculate position changes
         delta_left_pos = self.left_pos - self.prev_left_pos
@@ -118,8 +150,8 @@ class OdrivePositionOdometry(Node):
         self.theta = math.atan2(math.sin(self.theta), math.cos(self.theta))
         
         # Calculate velocities for odometry message
-        self.vx = distance_center / dt if dt > 0 else 0.0
-        self.vth = delta_theta / dt if dt > 0 else 0.0
+        self.vx = (self.v_left + self.v_right) / 2
+        self.vth = (self.v_left - self.v_right) / self.track_width
         
         # Publish odometry
         self.publish_odometry(current_time)

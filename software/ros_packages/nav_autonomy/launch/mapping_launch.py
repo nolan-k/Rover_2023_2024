@@ -66,6 +66,11 @@ def generate_launch_description():
     # /RGBD
         # Configure loop closure and graph optimization for RGBD
 
+# Reduce computation?
+        'Grid/DepthDecimation':"8",         # 4 by default
+        'Grid/NormalK':"10",                # 20 by default
+        
+
         }]        
 
     remappings=[
