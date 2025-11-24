@@ -70,7 +70,7 @@ def generate_launch_description():
         # joint_state_broadcaster_spawner, 
         # diff_drive_controller_spawner
         # joystick,
-        twist_mux,
+    #    twist_mux,
         # rtabmap_point_cloud,
         # rtabmap_obstacles,
         nav2,

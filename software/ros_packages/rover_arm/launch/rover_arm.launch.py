@@ -223,11 +223,11 @@ def generate_launch_description():
                 name="robot_state_publisher",
                 parameters=[moveit_config.robot_description],
             ),
-            ComposableNode(
-                package="joy",
-                plugin="joy::Joy",
-                name="joy_node",
-            ),
+            #ComposableNode(
+            #    package="joy",
+            #    plugin="joy::Joy",
+            #    name="joy_node",
+            #),
         ],
         output="screen",
     )
@@ -314,18 +314,18 @@ def generate_launch_description():
     return LaunchDescription(
         [
             ros2_control_hardware_type, 
-            controller_type,
-            rviz_node,
+            #controller_type,
+            #rviz_node,
             container,
-            move_group_node,
-            ros2_control_node,
-            joint_state_broadcaster_spawner,
-            rover_arm_controller_spawner,
-            joy_to_servo_node,
-            controller_switcher_node,
-            servo_node,
-            d405_node,
-            moveit_arm_controller_spawner,
+            #move_group_node,
+            #ros2_control_node,
+            #joint_state_broadcaster_spawner,
+            #rover_arm_controller_spawner,
+            #joy_to_servo_node,
+            #controller_switcher_node,
+            #servo_node,
+            #d405_node,
+            #moveit_arm_controller_spawner,
             #d455_node,
 
         ]

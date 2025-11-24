@@ -6,6 +6,23 @@ from geometry_msgs.msg import TransformStamped
 from std_msgs.msg import Float32  # Adjust to your actual message type
 import tf2_ros
 import math
+from collections import deque
+
+
+class EMA:
+    def __init__(self, alpha=0.3):
+        self.alpha = alpha
+        self.ema = None
+        
+    def add(self, value):
+        if self.ema is None:
+            self.ema = value
+        else:
+            self.ema = self.alpha * value + (1 - self.alpha) * self.ema
+        return self.ema
+    
+    def cur(self):
+        return self.ema
 
 class OdrivePositionOdometry(Node):
     def __init__(self):
@@ -62,47 +79,32 @@ class OdrivePositionOdometry(Node):
         self.initialized = False
 
         # Counter to only publish every 2 updates (poor mans way of syncronizing and limiting hz)
-        self.update_count = 0
+        self.left_update = False 
+        self.right_update = False
 
         # Left and right wheel velocities
         self.v_left = 0.0
         self.v_right = 0.0
+
+        # Left and right exponential moving average filters
+        self.left_filter = EMA()
+        self.right_filter = EMA()
         
     def left_pos_callback(self, msg):
         """Update left wheel position"""
-        self.left_pos = msg.data
         self.update_count += 1
+        self.left_update = True
 
-        # Initialize on first callback
-        if not self.initialized:
-            if self.prev_left_pos is None:
-                self.prev_left_pos = self.left_pos
-
-        # Calculate wheel velocity
-        current_time = self.get_clock().now()
-        dt = (current_time - self.last_time).nanoseconds / 1e9
-        if dt == 0:
-            return
-        self.v_left = (self.left_pos - self.prev_left_pos) * self.wheel_circumference / dt
+        self.left_filter.add(msg)
 
         self.calculate_odometry()
         
     def right_pos_callback(self, msg):
         """Update right wheel position"""
-        self.right_pos = msg.data
         self.update_count += 1
+        self.right_update = True
 
-        # Initialize on first callback
-        if not self.initialized:
-            if self.prev_right_pos is None:
-                self.prev_right_pos = self.right_pos
-
-        # Calculate wheel velocity
-        current_time = self.get_clock().now()
-        dt = (current_time - self.last_time).nanoseconds / 1e9
-        if dt == 0:
-            return
-        self.v_right = (self.right_pos - self.prev_right_pos) * self.wheel_circumference / dt 
+        self.right_filter.add(msg)
 
         self.calculate_odometry()
         
@@ -111,55 +113,59 @@ class OdrivePositionOdometry(Node):
         """Calculate odometry from position changes"""
         
         # Initialize on first callback
-        if not self.initialized:
-            if self.prev_left_pos is not None and self.prev_right_pos is not None:
-                self.initialized = True
-                self.get_logger().info('Odometry initialized')
-            return
+        # if not self.initialized:
+        #     if self.prev_left_pos is not None and self.prev_right_pos is not None:
+        #         self.initialized = True
+        #         self.get_logger().info('Odometry initialized')
+        #     return
         
-        # Wait until reciving 2 updates to push an odom update
-        if self.update_count >= 2:
-            self.update_count = 0
+        # Wait until reciving update from both sides
+        if self.left_update and self.right_update:
+            self.left_update = False
+            self.right_update = False
         else:
             return
         
+        self.v_left = self.left_filter.cur() * self.wheel_circumference
+        self.v_right = self.right_filter.cur() * self.wheel_circumference
+        
         current_time = self.get_clock().now()
         
-        # Calculate position changes
-        delta_left_pos = self.left_pos - self.prev_left_pos
-        delta_right_pos = self.right_pos - self.prev_right_pos
+        # # Calculate position changes
+        # delta_left_pos = self.left_pos - self.prev_left_pos
+        # delta_right_pos = self.right_pos - self.prev_right_pos
         
-        # Convert to linear distances
-        distance_left = delta_left_pos*self.wheel_circumference
-        distance_right = delta_right_pos*self.wheel_circumference
+        # # Convert to linear distances
+        # distance_left = delta_left_pos*self.wheel_circumference
+        # distance_right = delta_right_pos*self.wheel_circumference
         
-        # Calculate robot motion
-        distance_center = (distance_right + distance_left) / 2.0
-        delta_theta = (distance_right - distance_left) / self.track_width
+        # # Calculate robot motion
+        # distance_center = (distance_right + distance_left) / 2.0
+        # delta_theta = (distance_right - distance_left) / self.track_width
         
-        # Update pose
-        # Use midpoint method for better accuracy with large rotation changes
-        self.theta += delta_theta
-        delta_x = distance_center * math.cos(self.theta - delta_theta / 2.0)
-        delta_y = distance_center * math.sin(self.theta - delta_theta / 2.0)
+        # # Update pose
+        # # Use midpoint method for better accuracy with large rotation changes
+        # self.theta += delta_theta
+        # delta_x = distance_center * math.cos(self.theta - delta_theta / 2.0)
+        # delta_y = distance_center * math.sin(self.theta - delta_theta / 2.0)
         
-        self.x += delta_x
-        self.y += delta_y
+        # self.x += delta_x
+        # self.y += delta_y
         
-        # Normalize theta to [-pi, pi]
-        self.theta = math.atan2(math.sin(self.theta), math.cos(self.theta))
+        # # Normalize theta to [-pi, pi]
+        # self.theta = math.atan2(math.sin(self.theta), math.cos(self.theta))
         
         # Calculate velocities for odometry message
         self.vx = (self.v_left + self.v_right) / 2
-        self.vth = (self.v_left - self.v_right) / self.track_width
+        self.vth = (self.v_right - self.v_left) / self.track_width
         
         # Publish odometry
         self.publish_odometry(current_time)
         
         # Update previous positions and time
-        self.prev_left_pos = self.left_pos
-        self.prev_right_pos = self.right_pos
-        self.last_time = current_time
+        # self.prev_left_pos = self.left_pos
+        # self.prev_right_pos = self.right_pos
+        # self.last_time = current_time
         
     def publish_odometry(self, current_time):
         """Publish odometry message and TF transform"""
@@ -171,15 +177,15 @@ class OdrivePositionOdometry(Node):
         odom.child_frame_id = 'base_link'
         
         # Position
-        odom.pose.pose.position.x = self.x
-        odom.pose.pose.position.y = self.y
-        odom.pose.pose.position.z = 0.0
+        # odom.pose.pose.position.x = self.x
+        # odom.pose.pose.position.y = self.y
+        # odom.pose.pose.position.z = 0.0
         
-        # Orientation (convert theta to quaternion)
-        odom.pose.pose.orientation.x = 0.0
-        odom.pose.pose.orientation.y = 0.0
-        odom.pose.pose.orientation.z = math.sin(self.theta / 2.0)
-        odom.pose.pose.orientation.w = math.cos(self.theta / 2.0)
+        # # Orientation (convert theta to quaternion)
+        # odom.pose.pose.orientation.x = 0.0
+        # odom.pose.pose.orientation.y = 0.0
+        # odom.pose.pose.orientation.z = math.sin(self.theta / 2.0)
+        # odom.pose.pose.orientation.w = math.cos(self.theta / 2.0)
         
         # Velocity in body frame
         odom.twist.twist.linear.x = self.vx
