@@ -68,25 +68,28 @@ class DriveCanControlNode(Node):
     #Iterates over each node and sets the axis state, control mode (velocity), and velocity ramp Limit
     def setup_controller(self):
         for node_id in NODES:
-            BUS.send(can.Message(
-            arbitration_id=(node_id << 5 | 0x07), # 0x07: Set_Axis_State
-            data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
-            is_extended_id=False
-            ))
+            try:
+                BUS.send(can.Message(
+                arbitration_id=(node_id << 5 | 0x07), # 0x07: Set_Axis_State
+                data=struct.pack('<I', 8), # 8: AxisState.CLOSED_LOOP_CONTROL
+                is_extended_id=False
+                ))
           
-            #Set velocity ramp control mode
-            BUS.send(can.Message(
-            arbitration_id=(node_id << 5 | 0x0b), 
-            data=struct.pack('<II', 2,2),
-            is_extended_id=False
-            ))
+                #Set velocity ramp control mode
+                BUS.send(can.Message(
+                arbitration_id=(node_id << 5 | 0x0b), 
+                data=struct.pack('<II', 2,2),
+                is_extended_id=False
+                ))
 
-            BUS.send(can.Message(
-            arbitration_id=(node_id << 5 | 0x04), 
-            data=struct.pack('<BHBf', 1,403,0,VEL_RAMP),
-            is_extended_id=False
-            ))
-
+                BUS.send(can.Message(
+                arbitration_id=(node_id << 5 | 0x04), 
+                data=struct.pack('<BHBf', 1,403,0,VEL_RAMP),
+                is_extended_id=False
+                ))
+            except Exception as e:
+                self.get_logger().info(f"Drive Can error: {e}")
+                
 
     #This callback is called as a 50hz loop, as configured on node init.
     def timer_callback(self):
@@ -133,22 +136,23 @@ class DriveCanControlNode(Node):
         
         #Get the left, right command velocities
         left_velocity, right_velocity = self.compute_drive_sides()
-
+        try:
         #Logic for sending velocity through can HERE
-        for node_id in LEFT_NODES:
-            BUS.send(can.Message(
-            arbitration_id=(node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
-            data=struct.pack('<ff', left_velocity, 0.0), # 1.0: velocity, 0.0: torque feedforward
-            is_extended_id=False
-            ))
+            for node_id in LEFT_NODES:
+                BUS.send(can.Message(
+                arbitration_id=(node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
+                data=struct.pack('<ff', left_velocity, 0.0), # 1.0: velocity, 0.0: torque feedforward
+                is_extended_id=False
+                ))
 
-        for node_id in RIGHT_NODES:
-            BUS.send(can.Message(
-            arbitration_id=(node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
-            data=struct.pack('<ff', right_velocity, 0.0), # 1.0: velocity, 0.0: torque feedforward
-            is_extended_id=False
-            ))
-
+            for node_id in RIGHT_NODES:
+                BUS.send(can.Message(
+                arbitration_id=(node_id << 5 | 0x0d), # 0x0d: Set_Input_Vel
+                data=struct.pack('<ff', right_velocity, 0.0), # 1.0: velocity, 0.0: torque feedforward
+                is_extended_id=False
+                ))
+        except Exception as e:
+            self.get_logger().info(f"Drive Can error: {e}")
 
     #Function to compute the actual Differential drive commanded speeds from the forward/angular velocity intput
     def compute_drive_sides(self):

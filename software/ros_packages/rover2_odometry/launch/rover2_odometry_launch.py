@@ -15,18 +15,18 @@ def generate_launch_description():
             name='imu',
             **config
         ),
-        Node(
-            package='rover2_odometry',
-            executable='simple_position',
-            name='simple_position',
-            **config
-        ),
-        Node(
-            package='rover2_odometry',
-            executable='scimech_sensors',
-            name='scimech_sensors',
-            **config
-        ),
+#        Node(
+#            package='rover2_odometry',
+#            executable='simple_position',
+#            name='simple_position',
+#            **config
+#        ),
+#        Node(
+#            package='rover2_odometry',
+#            executable='scimech_sensors',
+#            name='scimech_sensors',
+#            **config
+#        ),
         Node(
             package='rover2_odometry',
             executable='odometry',
@@ -71,7 +71,7 @@ def generate_launch_description():
             name='ekf_global',
             output='screen',
             parameters=[{
-                'frequency': 50.0,
+                'frequency': 30.0,
                 'sensor_timeout': 0.1,
                 'two_d_mode': True,
                 'transform_time_offset': 0.0,
@@ -143,7 +143,7 @@ def generate_launch_description():
     output='screen',
     parameters=[{
         # Frequency and timing
-        'frequency': 30.0,
+        'frequency': 3.0,
         'delay': 3.0,
         
         # Magnetic declination at your location (radians)
