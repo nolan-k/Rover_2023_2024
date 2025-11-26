@@ -41,28 +41,28 @@ def generate_launch_description():
         ),
 
         # Launch visual odom
-        # Node(
-        #     package='rtabmap_odom', 
-        #     executable='rgbd_odometry', 
-        #     output='screen',
-        #     parameters=[{
-        #         # Frames
-        #         'frame_id':'rover_base_origin',
-        #         'odom_frame_id': "odom",
+         Node(
+             package='rtabmap_odom', 
+             executable='rgbd_odometry', 
+             output='screen',
+             parameters=[{
+                 # Frames
+                 'frame_id':'rover_base_origin',
+                 'odom_frame_id': "odom",
 
-        #         # config params
-        #         'publish_tf':False, 
-        #         'approx_sync':False,
+                 # config params
+                 'publish_tf':False, 
+                 'approx_sync':False,
 
-        #         # Internal Params (must be strings)
-        #         'Odom/Strategy':'1',        # 0 = Frame to map , 1 = Frame to Frame
-        #     }],
-        #     remappings=[
-        #         ('rgb/image', '/camera/d455/color/image_raw'),
-        #         ('rgb/camera_info', '/camera/d455/color/camera_info'),
-        #         ('depth/image', '/camera/d455/aligned_depth_to_color/image_raw'),
-        #         ('odom', '/odometry/visual'),
-        #     ]),
+                 # Internal Params (must be strings)
+                 'Odom/Strategy':'1',        # 0 = Frame to map , 1 = Frame to Frame
+             }],
+             remappings=[
+                 ('rgb/image', '/camera/d455/color/image_raw'),
+                 ('rgb/camera_info', '/camera/d455/color/camera_info'),
+                 ('depth/image', '/camera/d455/aligned_depth_to_color/image_raw'),
+                 ('odom', '/odometry/visual'),
+             ]),
 
         # Global EKF (fuses local EKF and GPS - also publishes odom->base_link)
         Node(
@@ -97,15 +97,15 @@ def generate_launch_description():
                 'odom0_relative': False,
 
                 # Visual odometry
-                # 'odom1': '/odometry/visual',
-                # 'odom1_config': [True,  True,  False,   # x, y position
-                #                 False, False, True,     # yaw orientation
-                #                 False, False, False,
-                #                 False, False, False,
-                #                 False, False, False],
-                # 'odom1_queue_size': 10,
-                # 'odom1_differential': False,
-                # 'odom1_relative': False,
+                 'odom1': '/odometry/visual',
+                 'odom1_config': [True,  True,  False,   # x, y position
+                                 False, False, False,     # yaw orientation
+                                 True, False, False,
+                                 False, False, False,
+                                 False, False, False],
+                 'odom1_queue_size': 10,
+                 'odom1_differential': False,
+                 'odom1_relative': False,
                 
                 # GPS odometry (from navsat_transform)
 #                'odom2': '/odometry/gps',

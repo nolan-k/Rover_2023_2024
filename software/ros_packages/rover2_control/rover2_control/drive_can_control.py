@@ -1,4 +1,4 @@
-import rclpy
+\import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64MultiArray
 from geometry_msgs.msg import Twist
@@ -124,8 +124,8 @@ class DriveCanControlNode(Node):
         # Assume left stick y-axis for forward/backward and right stick x-axis for turning
         if msg.controller_present:
 
-            self.linear_velocity = msg.drive_twist.linear.x  # Left joystick vertical axis (forward/backward)
-            self.angular_velocity = msg.drive_twist.angular.z  # Right joystick horizontal axis (turning)
+            self.linear_velocity = msg.drive_twist.linear.x * RPS_FACTOR  # Left joystick vertical axis (forward/backward)
+            self.angular_velocity = msg.drive_twist.angular.z  * RPS_FACTOR # Right joystick horizontal axis (turning)
             self.send_drive_commands()
             # You may want to scale these velocities to suit your needs (e.g., make them faster/slower)
             self.last_message_time = time()
@@ -177,8 +177,8 @@ class DriveCanControlNode(Node):
 
 
         #Scale the Drive speeds from unity accordingly
-        left_velocity = RPS_FACTOR * GEAR_RATIO * left_norm
-        right_velocity = RPS_FACTOR * GEAR_RATIO * right_norm
+        left_velocity = GEAR_RATIO * left_norm
+        right_velocity = GEAR_RATIO * right_norm
 
         return left_velocity, right_velocity
 
