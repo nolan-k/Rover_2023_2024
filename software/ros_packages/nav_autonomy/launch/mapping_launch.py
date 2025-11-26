@@ -37,16 +37,27 @@ def generate_launch_description():
 # Internal parameters (must be strings)
     # /Grid
         # Configure generation of obstacle map
-        'Grid/3D':"false",                 # We do not want octomap. Saves memory and time 
+        # KRJ TODO: Try with 3D map
+        'Grid/3D':"false",                 # We do not want octomap. Saves memory and time. Allows raytracing?
         'Grid/CellSize':".05",
+        'Grid/RangeMin':"0.0",      # 0 default      
+        'Grid/RangeMax':"5",        # 5 default
         'Grid/MaxGroundAngle':"60",
-        'Grid/RayTracing': 'true',         # Fill empty space
+        'Grid/RayTracing': 'true',         # Only applies to 3D Grid (octomap) Fill empty space
+        # 'Grid/FromDepth': 'true',          # KRJ TODO: IDK what this was for 
         # 'Grid/MaxGroundHeight':".1",
         # 'Grid/MapFrameProjection':"true",
 
-        # filtering
-        # 'Grid/NoiseFilteringRadius':".05",
-        # 'Grid/NoiseFilteringMinNeighbors':"5",
+        # Noise filtering
+            # KRJ TODO: This could break it if it filters out too many
+        'Grid/NoiseFilteringRadius':".1",      # Must have so many neighbors within radius to be considered. Done after segmentation
+        'Grid/NoiseFilteringMinNeighbors':"5",
+
+        # Other stuff
+        'GridGlobal/Eroded': 'true',           
+        'Grid/MinClusterSize': '10',    # 10 default      Minimum cluster size to project the points.   KRJ TODO: How is this different from noise filtering min neighbors. I dont' think I understand what this does, so I'm not gonna mess withit. Its part of segmenting ground from objects by normals
+        'GridGlobal/FootprintRadius': '.2',    # Footprint radius (m) used to clear all obstacles under the graph. 
+            
 
     # /Optimzer
 #        "Optimizer/PriorsIgnored":'false',  # Fuse GPS as a prior
