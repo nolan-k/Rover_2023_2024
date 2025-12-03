@@ -17,78 +17,16 @@ import os
         # odom -> base_link
         # base_link -> ... -> <camera_name>_color_optical_frame
 
-# KRJ TODO: convert this to a rtab param config file instead
 def generate_launch_description():
-    parameters=[{
-        # "use_sim_time": True,
+    package_name='nav_autonomy'
+    pkg_share = get_package_share_directory(package_name)
 
-        # Frames
-        'frame_id':'rover_base_origin',   # base link frame     
-        'odom_frame_id': "odom",        # set this to get odom from the tf instead of a topic sub
-        'map_frame_id': "map",          # set tf head to "world" instead of "map" to avoid tf conflicts
-        
-        #  Rtab params
-        'subscribe_depth':True,
-        'subscribe_rgb':True,
-        'subscribe_odom_info':False,
-        'approx_sync':False,              # Set to false because images are all from single camera, so will be synced
-        'publish_tf':True,
-
-# Internal parameters (must be strings)
-    # /Grid
-        # Configure generation of obstacle map
-        # KRJ TODO: Try with 3D map
-        'Grid/3D':"false",                 # We do not want octomap. Saves memory and time. Allows raytracing?
-        'Grid/CellSize':".05",
-        'Grid/RangeMin':"0.0",      # 0 default      
-        'Grid/RangeMax':"5",        # 5 default
-        'Grid/MaxGroundAngle':"60",
-        'Grid/RayTracing': 'true',         # Only applies to 3D Grid (octomap) Fill empty space
-        # 'Grid/FromDepth': 'true',          # KRJ TODO: IDK what this was for 
-        # 'Grid/MaxGroundHeight':".1",
-        # 'Grid/MapFrameProjection':"true",
-
-        # Noise filtering
-            # KRJ TODO: This could break it if it filters out too many
-        'Grid/NoiseFilteringRadius':".1",      # Must have so many neighbors within radius to be considered. Done after segmentation
-        'Grid/NoiseFilteringMinNeighbors':"5",
-
-        # Other stuff
-        'GridGlobal/Eroded': 'true',           
-        'Grid/MinClusterSize': '10',    # 10 default      Minimum cluster size to project the points.   KRJ TODO: How is this different from noise filtering min neighbors. I dont' think I understand what this does, so I'm not gonna mess withit. Its part of segmenting ground from objects by normals
-        'GridGlobal/FootprintRadius': '.2',    # Footprint radius (m) used to clear all obstacles under the graph. 
-            
-
-    # /Optimzer
-#        "Optimizer/PriorsIgnored":'false',  # Fuse GPS as a prior
-            # Note from the docs: "Currently only g2o and gtsam optimization supports this."
-            # It is ambiguous whether this is refering to supporting priors or supporting ignoring priors
-            # By default the optimization method is neither of these, should be TORO (double check this)
-
-    # /Rtabmap
-            # Some general params for loop closure thresholds
- #       "Rtabmap/LoopGPS":'true',
-
-        # Internal parameters (must be strings)
-
-    # /Reg and /Vis
-        # Configure point cloud registration (first step in sticking frames together)
-        
-    # /RGBD
-        # Configure loop closure and graph optimization for RGBD
-
-# Reduce computation?
-  #      'Grid/DepthDecimation':"8",         # 4 by default
-  #      'Grid/NormalK':"10",                # 20 by default
-        
-
-        }]        
+    parameters = [os.path.join(pkg_share, 'config', 'rtab_params.yaml')]
 
     remappings=[
         ('rgb/image', '/camera/d455/color/image_raw'),
         ('rgb/camera_info', '/camera/d455/color/camera_info'),
         ('depth/image', '/camera/d455/aligned_depth_to_color/image_raw'),
-        # ('odom', '/odometry/global'),
         ]
         
     config_rviz = os.path.join(
