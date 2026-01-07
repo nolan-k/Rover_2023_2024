@@ -17,29 +17,18 @@ import os
         # odom -> base_link
         # base_link -> ... -> <camera_name>_color_optical_frame
 
-
 def generate_launch_description():
-    parameters=[{
-        "use_sim_time": True,
+    package_name='nav_autonomy'
+    pkg_share = get_package_share_directory(package_name)
 
-        # Rtab params
-        'frame_id':'base_link',           
-        # 'odom_frame_id': "odom",        # set this to get odom from the tf instead of a topic sub
-        'map_frame_id': "world",          # set tf head to "world" instead of "map" to avoid tf conflicts
-        'subscribe_depth':True,
-        'subscribe_rgb':True,
-        'subscribe_odom_info':True,
-        'approx_sync':False,              # Set to false because images are all from single camera, so will be synced
-
-        # Internal parameters (must be strings)
-        'Grid/3D':"false",                 # We do not want octomap. Saves memory and time
-        }]        
+    parameters = [os.path.join(pkg_share, 'config', 'rtab_params.yaml')]
 
     remappings=[
         ('rgb/image', '/camera/d455/color/image_raw'),
         ('rgb/camera_info', '/camera/d455/color/camera_info'),
-        ('depth/image', '/camera/d455/aligned_depth_to_color/image_raw')]
-    
+        ('depth/image', '/camera/d455/aligned_depth_to_color/image_raw'),
+        ]
+        
     config_rviz = os.path.join(
         get_package_share_directory('nav_autonomy'), 'config', 'map_display_cfg.rviz'
     )
