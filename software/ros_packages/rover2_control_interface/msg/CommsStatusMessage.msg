@@ -8,4 +8,4 @@ float32 rxbitrate
 float32 txbitrate
 float32 txpower
 int32 channel_width
-bool connected
+bool connected_to_target

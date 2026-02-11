@@ -13,6 +13,8 @@ class InterfaceStatus:
     txbitrate: typing.Optional[float] #upload bitrate Mbps
     txpower: typing.Optional[float] #transmit power dBm
     channelWidth: typing.Optional[int] #channel width MHz
+    connected: bool #is there a working ssh connection to the target
+    syncing: bool #were monitoring commands executed successfully on the target
 
     def __init__(
                 self,
@@ -25,7 +27,9 @@ class InterfaceStatus:
                 rxbitrate: typing.Optional[float] = None,
                 txbitrate: typing.Optional[float] = None,
                 txpower: typing.Optional[float] = None,
-                channelWidth: typing.Optional[int] = None
+                channelWidth: typing.Optional[int] = None,
+                connected: bool = False,
+                syncing: bool = False
                  ):
         self.signalLevel = signalLevel
         self.noiseLevel = noiseLevel
@@ -38,6 +42,8 @@ class InterfaceStatus:
         self.txbitrate = txbitrate
         self.txpower = txpower
         self.channelWidth = channelWidth
+        self.connected = connected
+        self.syncing = syncing
 
     def __str__(self) -> str:
         return \
@@ -76,108 +82,121 @@ class WirelessInterface:
 
     #Gets status information about this interface.
     def getStatus(self) -> InterfaceStatus:
+        try:
+            def sshRun(command: str) -> subprocess.CompletedProcess[str]:
+                    return subprocess.run(['ssh', f'{self.username}@{self.remoteAddr}', '"{command}"'], text=True, capture_output=True)
 
-        def sshRun(command: str) -> subprocess.CompletedProcess[str]:
-            return subprocess.run(f'ssh {self.username}@{self.remoteAddr} "{command}"', text=True, capture_output=True)
+            def intOrNone(input: str) -> typing.Optional[int]:
+                try:
+                    return int(input)
+                except ValueError:
+                    return None
 
-        def intOrNone(input: str) -> typing.Optional[int]:
-            try:
-                return int(input)
-            except ValueError:
-                return None
-            
-        def floatOrNone(input: str) -> typing.Optional[float]:
-            try:
-                return float(input)
-            except ValueError:
-                return None
+            def floatOrNone(input: str) -> typing.Optional[float]:
+                try:
+                    return float(input)
+                except ValueError:
+                    return None
 
-        result = InterfaceStatus()
-        
-        if self.type == WirelessInterface.InterfaceType.GENERIC_IW:
-            #use iw to get interface info. This should contain the channel, frequency, channel width, and tx power.
-            output = sshRun(f"iw dev {self.interfaceName} info")
+            result = InterfaceStatus()
 
-            if output.returncode == 0:
-                tokens = output.stdout.split()
-                for i in range(0, len(tokens)):
-                    if (tokens[i] == 'channel'):
-                        i += 1
-                        result.channel = intOrNone(tokens[i])
-                        i += 1
-                        result.frequency = intOrNone(tokens[i].removeprefix('('))
-                    elif (tokens[i] == 'width:'):
-                        i += 1
-                        result.channelWidth = intOrNone(tokens[i])
-                    elif (tokens[i] == 'txpower'):
-                        i += 1
-                        result.txpower = floatOrNone(tokens[i])
-            else:
-                print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
+            if self.type == WirelessInterface.InterfaceType.GENERIC_IW:
+                #use iw to get interface info. This should contain the channel, frequency, channel width, and tx power.
+                output = sshRun(f"iw dev {self.interfaceName} info")
 
-            #use iw to get link info. Should contain signal level, bitrates, and mcs info
-            output = sshRun(f"iw dev {self.interfaceName} link")
+                if output.returncode == 0:
+                    tokens = output.stdout.split()
+                    for i in range(0, len(tokens)):
+                        if (tokens[i] == 'channel'):
+                            i += 1
+                            result.channel = intOrNone(tokens[i])
+                            i += 1
+                            result.frequency = intOrNone(tokens[i].removeprefix('('))
+                        elif (tokens[i] == 'width:'):
+                            i += 1
+                            result.channelWidth = intOrNone(tokens[i])
+                        elif (tokens[i] == 'txpower'):
+                            i += 1
+                            result.txpower = floatOrNone(tokens[i])
+                else:
+                    print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
 
-            if output.returncode == 0:
+                #use iw to get link info. Should contain signal level, bitrates, and mcs info
+                output = sshRun(f"iw dev {self.interfaceName} link")
+
+                if output.returncode == 0:
+                    lines = output.stdout.splitlines()
+                    for l in lines:
+                        tokens = l.split()
+                        if (tokens[0] == 'signal:'):
+                            result.channel = intOrNone(tokens[1])
+                        elif (tokens[0] == 'rx bitrate:'):
+                            result.rxbitrate = floatOrNone(tokens[1])
+                            result.rxmcs = str.join(' ', tokens[1:len(tokens)])
+                        elif (tokens[0] == 'tx bitrate:'):
+                            result.txbitrate = floatOrNone(tokens[1])
+                            result.txmcs = str.join(' ', tokens[1:len(tokens)])
+                else:
+                    print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
+
+                #attempt to get noise level from /proc/net/wireless
+                output = sshRun(f"cat /proc/net/wireless")
+
+                if output.returncode == 0:
+                    lines = output.stdout.splitlines()
+                    for l in lines:
+                        tokens = l.split()
+                        if (tokens[0] == self.interfaceName+':'):
+                            result.noiseLevel = intOrNone(tokens[4])
+                else:
+                    print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
+
+            elif self.type == WirelessInterface.InterfaceType.MM_HALOW:
+
+                output = sshRun(f"morse_cli -i {self.interfaceName} stats")
+
                 lines = output.stdout.splitlines()
+
                 for l in lines:
-                    tokens = l.split()
-                    if (tokens[0] == 'signal:'):
-                        result.channel = intOrNone(tokens[1])
-                    elif (tokens[0] == 'rx bitrate:'):
-                        result.rxbitrate = floatOrNone(tokens[1])
-                        result.rxmcs = str.join(' ', tokens[1:len(tokens)])
-                    elif (tokens[0] == 'tx bitrate:'):
-                        result.txbitrate = floatOrNone(tokens[1])
-                        result.txmcs = str.join(' ', tokens[1:len(tokens)])
-            else:
-                print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
+                    tokens = l.split(':')
+                    if tokens[0] == "Received Power (dBm)":
+                        result.signalLevel = intOrNone(tokens[1])
+                    elif tokens[0] == "Noise dBm":
+                        result.noiseLevel = intOrNone(tokens[1])
+                    elif tokens[0] == "Current RF frequency Hz":
+                        result.frequency = intOrNone(tokens[1])
+                        if type(result.frequency) == int:
+                            result.frequency //= 1000000
+                    elif tokens[0] == "Current Operating BW MHz":
+                        result.channelWidth = intOrNone(tokens[1])
 
-            #attempt to get noise level from /proc/net/wireless
-            output = sshRun(f"cat /proc/net/wireless")
+                output = sshRun(f"iwinfo {self.interfaceName} info") 
 
-            if output.returncode == 0:
-                lines = output.stdout.splitlines()
                 for l in lines:
-                    tokens = l.split()
-                    if (tokens[0] == self.interfaceName+':'):
-                        result.noiseLevel = intOrNone(tokens[4])
+                    tokens = l.split(':')
+                    if tokens[0].strip() == "Tx-Power":
+                        result.txpower = intOrNone(tokens[1])
+                    elif tokens[0].strip() == "Mode":
+                        result.channel = intOrNone(tokens[3])
+                    elif tokens[0].strip() == "Bit Rate":
+                        result.txbitrate = floatOrNone(tokens[1])  
+
+            elif self.type == WirelessInterface.InterfaceType.UBIQUITI_AIROS:
+                #TODO parse airos status
+                pass
+
+            result.connected = True
+            result.syncing = True
+
+        except ChildProcessError as e:
+            if e.errno == 255:
+                result.connected = True
+                result.syncing = False
+                return result
             else:
-                print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
-
-        elif self.type == WirelessInterface.InterfaceType.MM_HALOW:
-
-            output = sshRun(f"morse_cli -i {self.interfaceName} stats")
-
-            lines = output.stdout.splitlines()
-
-            for l in lines:
-                tokens = l.split(':')
-                if tokens[0] == "Received Power (dBm)":
-                    result.signalLevel = intOrNone(tokens[1])
-                elif tokens[0] == "Noise dBm":
-                    result.noiseLevel = intOrNone(tokens[1])
-                elif tokens[0] == "Current RF frequency Hz":
-                    result.frequency = intOrNone(tokens[1])
-                    if type(result.frequency) == int:
-                        result.frequency //= 1000000
-                elif tokens[0] == "Current Operating BW MHz":
-                    result.channelWidth = intOrNone(tokens[1])
-
-            output = sshRun(f"iwinfo {self.interfaceName} info") 
-
-            for l in lines:
-                tokens = l.split(':')
-                if tokens[0].strip() == "Tx-Power":
-                    result.txpower = intOrNone(tokens[1])
-                elif tokens[0].strip() == "Mode":
-                    result.channel = intOrNone(tokens[3])
-                elif tokens[0].strip() == "Bit Rate":
-                    result.rxbitrate = floatOrNone(tokens[1])  
-
-        elif self.type == WirelessInterface.InterfaceType.UBIQUITI_AIROS:
-            #TODO parse airos status
-                     
+                result.connected = False
+                result.syncing = False
+                return result
 
         return result
 
