@@ -16,6 +16,8 @@ from std_msgs.msg import Float32
 
 from os import getcwd
 
+MONITOR_NODE_PREFIX = 'comms_monitor_'
+
 class WirelessInterfaceMonitor(Node):
 
     lat:     float = 0.0
@@ -27,12 +29,12 @@ class WirelessInterfaceMonitor(Node):
     name = ""
     status = InterfaceStatus(connected=False, syncing=False)
 
-    def __init__(self, name: str, interface: WirelessInterface, logging: bool = False, logPeriod: float = 5.0, logDirectory: str = ""): 
+    def __init__(self, name: str, interface: WirelessInterface, logging: bool = False, logPeriod: float = 5.0, updatePeriod = 5.0, logDirectory: str = ""): 
         self.logDirectory = logDirectory
         self.name = name
         self.interface = interface
 
-        super().__init__(f'comms_monitor_{self.name}')
+        super().__init__(MONITOR_NODE_PREFIX + self.name)
         
         if (logging): #Create gps and imu subscriptions and logging timer if logging is enabled #TODO dynamically start and stop logging (ROS Service?)
             self.gpsSubscription = self.create_subscription(
@@ -61,7 +63,7 @@ class WirelessInterfaceMonitor(Node):
         )
 
         self.statusPublisherTimer = self.create_timer(
-            5.0,
+            updatePeriod,
             self.statusPublisherCallback
         )
 
@@ -156,11 +158,23 @@ def generateNodesFromConfig(cfgpath: str) -> List[WirelessInterfaceMonitor]:
             currentInferface = WirelessInterface()
             loggingEnabled = False
             loggingPeriod = 5.0
+            updatePeriod = 5.0
             loggingDirectory = ""
             deviceName = ""
 
             def createMonitorNode() -> WirelessInterfaceMonitor:
-                return WirelessInterfaceMonitor(deviceName, deepcopy(currentInferface), loggingEnabled, loggingPeriod, loggingDirectory)
+                print(f"Creating Comms Monitor Node: {deviceName} ({MONITOR_NODE_PREFIX+deviceName})")
+                print(f"update_period = {updatePeriod}")
+                print(f"logging_period = {loggingPeriod}")
+                print(f"logging_enabled = {loggingEnabled}")
+                print(f"logging_path = {loggingDirectory}")
+                print(f"ip = {currentInferface.remoteAddr}")
+                print(f"interface_name = {currentInferface.interfaceName}")
+                print(f"username = {currentInferface.username}")
+                print(f"password = {currentInferface.password}")
+                print(f"interface_type = {currentInferface.type}")
+                print()
+                return WirelessInterfaceMonitor(deviceName, deepcopy(currentInferface), loggingEnabled, loggingPeriod, updatePeriod, loggingDirectory)
 
             for l in f:
                 tokens = l.split('=')
@@ -184,6 +198,9 @@ def generateNodesFromConfig(cfgpath: str) -> List[WirelessInterfaceMonitor]:
                             currentInferface.type = WirelessInterface.InterfaceType.MM_HALOW
                         elif tokens[1].strip() == "UBIQUITI_AIROS" or tokens[1] == "AIROS":
                             currentInferface.type = WirelessInterface.InterfaceType.UBIQUITI_AIROS
+                    elif tokens[0].strip() == "update_period":
+                        updatePeriod = float(tokens[1])
+                        currentInferface.syncTimeoutSec = float(tokens[1])
                     elif tokens[0].strip() == "logging_period":
                         loggingPeriod = float(tokens[1])
                     elif tokens[0].strip() == "logging_enabled":

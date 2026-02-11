@@ -72,19 +72,21 @@ class WirelessInterface:
     username: str
     interfaceName: str
     type: InterfaceType
+    syncTimeoutSec: float
 
-    def __init__(self, remoteAddr: str = "", username: str = "", interfaceName: str = "", password: str = "", type: InterfaceType = InterfaceType.GENERIC_IW):
+    def __init__(self, remoteAddr: str = "", username: str = "", interfaceName: str = "", password: str = "", type: InterfaceType = InterfaceType.GENERIC_IW, syncTimeoutSec: float = 4.5):
         self.remoteAddr = remoteAddr
         self.interfaceName = interfaceName
         self.username = username
         self.password = password
         self.type = type  
+        self.syncTimeoutSec = syncTimeoutSec
 
     #Gets status information about this interface.
     def getStatus(self) -> InterfaceStatus:
         try:
             def sshRun(command: str) -> subprocess.CompletedProcess[str]:
-                    return subprocess.run(['ssh', f'{self.username}@{self.remoteAddr}', '"{command}"'], text=True, capture_output=True)
+                    return subprocess.run(['ssh', f'{self.username}@{self.remoteAddr}', '"{command}"'], text=True, capture_output=True, check=True, timeout=self.syncTimeoutSec)
 
             def intOrNone(input: str) -> typing.Optional[int]:
                 try:
@@ -197,6 +199,10 @@ class WirelessInterface:
                 result.connected = False
                 result.syncing = False
                 return result
+        except subprocess.TimeoutExpired as e:
+            result.connected = False
+            result.syncing = False
+            return result
 
         return result
 
