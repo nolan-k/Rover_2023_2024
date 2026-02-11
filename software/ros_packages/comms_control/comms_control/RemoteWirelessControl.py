@@ -92,41 +92,9 @@ class WirelessInterface:
         self.type = type  
         self.syncTimeoutSec = syncTimeoutSec
 
-    #This function logs in to the Ubiquiti device and returns a logged in session.
-    # Inputs: None
-    # Outputs:
-    #   Requests Session s
-    def _airOSLogin(self):
-        
-        s = requests.Session()
-        
-        #This seems unecessary but things breaks when it's removed...
-        s.get(
-            url = self.airOS_login_url.format(self.remoteAddr),
-            verify=False
-        )
-    
-        # conduct the login
-        r = s.post(
-            url=self.airOS_login_url.format(self.remoteAddr),
-            data={
-                'username': self.username,
-                'password': self.password
-            },
-            verify=False,
-            timeout=self.syncTimeoutSec*1000,
-        )
-    
-        # Error if the login fails
-        if r.status_code > 201:
-            #Return None to be handled externally
-            return None
-    
-        #Return the logged-in session so we can use it to get data
-        return s
-
     #Gets status information about this interface.
     def getStatus(self) -> InterfaceStatus:
+        result = InterfaceStatus()
         try:
             def sshRun(command: str) -> subprocess.CompletedProcess[str]:
                     return subprocess.run(['ssh', f'{self.username}@{self.remoteAddr}', '"{command}"'], text=True, capture_output=True, check=True, timeout=self.syncTimeoutSec)
@@ -142,8 +110,6 @@ class WirelessInterface:
                     return float(input)
                 except ValueError:
                     return None
-
-            result = InterfaceStatus()
 
             if self.type == WirelessInterface.InterfaceType.GENERIC_IW:
                 #use iw to get interface info. This should contain the channel, frequency, channel width, and tx power.
@@ -227,29 +193,63 @@ class WirelessInterface:
                         result.txbitrate = floatOrNone(tokens[1])  
 
             elif self.type == WirelessInterface.InterfaceType.UBIQUITI_AIROS:
-                ubiquiti_properties = [{"wireless" : {"channel":None, "frequency":None, "opmode":None, "signal":None, "noisef":None, "rssi":None, "txpower":None, "distance":None, "ccq":None, "rxrate":None, "txrate":None}}]
+                ubiquiti_properties = {"wireless" : {"channel":None, "frequency":None, "opmode":None, "signal":None, "noisef":None, "rssi":None, "txpower":None, "distance":None, "ccq":None, "rxrate":None, "txrate":None}}
+
+                #This function logs in to the Ubiquiti device and returns a logged in session.
+                # Inputs: None
+                # Outputs:
+                #   Requests Session s
+                def airOSLogin():
+                    
+                    s = requests.Session()
+                    
+                    #This seems unecessary but things breaks when it's removed...
+                    s.get(
+                        url = self.airOS_login_url.format(self.remoteAddr),
+                        verify=False
+                    )
+                
+                    # conduct the login
+                    r = s.post(
+                        url=self.airOS_login_url.format(self.remoteAddr),
+                        data={
+                            'username': self.username,
+                            'password': self.password
+                        },
+                        verify=False,
+                        timeout=self.syncTimeoutSec,
+                    )
+                
+                    # Error if the login fails
+                    if r.status_code > 201:
+                        #Return None to be handled externally
+                        return None
+                
+                    #Return the logged-in session so we can use it to get data
+                    return s
 
                 #This function requests the data from the rocket m2 and returns it as a dict of only the items specified in ubiquiti_properties
                 # Inputs:
                 #   request session s
                 # Outputs:
                 #   Data as a flattened dictionary
-                def request_data(s):
+                def request_data(s: requests.Session):
 
-                        url = f"https://{self.remoteAddr}/login.cgi"
+                        url = f"https://{self.remoteAddr}/status.cgi"
 
                         try:
                             r = s.get(
                                 url=url,
-                                verify=False
+                                verify=False,
+                                timeout=self.syncTimeoutSec
                             )
-
+                            
                             r_dict = r.json()
 
                             output = {}
 
                             #Get the desired entries from the returned json file:
-                            output = extract_flat_dict(ubiquiti_properties[i], r_dict)
+                            output = extract_flat_dict(ubiquiti_properties, r_dict)
                             #print(output)
 
                             return output
@@ -266,7 +266,7 @@ class WirelessInterface:
                 
                     output = []
 
-                    for key, value in properties.items():
+                    for key, value in properties:
                         #Check if it has any child properties:
                         if value == None:
                             output.append(key)
@@ -287,7 +287,7 @@ class WirelessInterface:
                 #    Flattened dictionary with flattened key names and desired fields filled in from the data dict
                 def extract_flat_dict(properties,data):
 
-                    output = {}
+                    output = dict()
                     for key, value in properties.items():
                         #Check if it has any child properties:
                         if value == None:
@@ -303,8 +303,11 @@ class WirelessInterface:
                 
                 try:
                     if self.airOSSession == None:
-                        self.airOSSession = self._airOSLogin()
-                    airOSdata = request_data(self.airOSSession)
+                        #print(f"Attempting Login {self.remoteAddr}")
+                        self.airOSSession = airOSLogin() #TODO Fix hang on login attempt when on a conflicting network
+                    if self.airOSSession != None:
+                        #print(f"Attempting Data Request {self.remoteAddr}")
+                        airOSdata = request_data(self.airOSSession)
                 except (requests.exceptions.HTTPError):
                     result.connected = True
                     result.syncing = False
@@ -314,15 +317,13 @@ class WirelessInterface:
                     result.syncing = False
                     return result
                 
-                result.channel =     int(airOSdata.get("wireless_channel"))
-                result.frequency =   int(airOSdata.get("wireless_frequency"))
-                result.signalLevel = int(airOSdata.get("wireless_signal"))
-                result.noiseLevel =  int(airOSdata.get("wireless_noisef"))
-                result.txpower =     int(airOSdata.get("wireless_txpower"))
-                result.rxbitrate = float(airOSdata.get("wireless_rxrate"))
-                result.txbitrate = float(airOSdata.get("wireless_txrate"))
-
-                return result
+                result.channel     =   int(airOSdata.get("wireless_channel"))
+                result.frequency   =   int(airOSdata.get("wireless_frequency").split(' ')[0])
+                result.signalLevel =   int(airOSdata.get("wireless_signal"))
+                result.noiseLevel  =   int(airOSdata.get("wireless_noisef"))
+                result.txpower     = float(airOSdata.get("wireless_txpower"))
+                result.rxbitrate   = float(airOSdata.get("wireless_rxrate"))
+                result.txbitrate   = float(airOSdata.get("wireless_txrate"))
 
 
             result.connected = True
