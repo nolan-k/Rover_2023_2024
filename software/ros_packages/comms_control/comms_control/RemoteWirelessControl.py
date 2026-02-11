@@ -2,6 +2,14 @@ import typing
 import subprocess
 from enum import Enum
 
+#web packages, used for AIR_OS
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import urllib3
+requests.packages.urllib3.disable_warnings()
+requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL'
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 class InterfaceStatus:
     signalLevel: typing.Optional[int] #Recieved signal level dBm
     noiseLevel: typing.Optional[int] #noise level dBm
@@ -73,6 +81,8 @@ class WirelessInterface:
     interfaceName: str
     type: InterfaceType
     syncTimeoutSec: float
+    airOSSession = None
+    airOS_login_url = 'https://{0}/login.cgi'
 
     def __init__(self, remoteAddr: str = "", username: str = "", interfaceName: str = "", password: str = "", type: InterfaceType = InterfaceType.GENERIC_IW, syncTimeoutSec: float = 4.5):
         self.remoteAddr = remoteAddr
@@ -81,6 +91,39 @@ class WirelessInterface:
         self.password = password
         self.type = type  
         self.syncTimeoutSec = syncTimeoutSec
+
+    #This function logs in to the Ubiquiti device and returns a logged in session.
+    # Inputs: None
+    # Outputs:
+    #   Requests Session s
+    def _airOSLogin(self):
+        
+        s = requests.Session()
+        
+        #This seems unecessary but things breaks when it's removed...
+        s.get(
+            url = self.airOS_login_url.format(self.remoteAddr),
+            verify=False
+        )
+    
+        # conduct the login
+        r = s.post(
+            url=self.airOS_login_url.format(self.remoteAddr),
+            data={
+                'username': self.username,
+                'password': self.password
+            },
+            verify=False,
+            timeout=self.syncTimeoutSec*1000,
+        )
+    
+        # Error if the login fails
+        if r.status_code > 201:
+            #Return None to be handled externally
+            return None
+    
+        #Return the logged-in session so we can use it to get data
+        return s
 
     #Gets status information about this interface.
     def getStatus(self) -> InterfaceStatus:
@@ -184,8 +227,103 @@ class WirelessInterface:
                         result.txbitrate = floatOrNone(tokens[1])  
 
             elif self.type == WirelessInterface.InterfaceType.UBIQUITI_AIROS:
-                #TODO parse airos status
-                pass
+                ubiquiti_properties = [{"wireless" : {"channel":None, "frequency":None, "opmode":None, "signal":None, "noisef":None, "rssi":None, "txpower":None, "distance":None, "ccq":None, "rxrate":None, "txrate":None}}]
+
+                #This function requests the data from the rocket m2 and returns it as a dict of only the items specified in ubiquiti_properties
+                # Inputs:
+                #   request session s
+                # Outputs:
+                #   Data as a flattened dictionary
+                def request_data(s):
+
+                        url = f"https://{self.remoteAddr}/login.cgi"
+
+                        try:
+                            r = s.get(
+                                url=url,
+                                verify=False
+                            )
+
+                            r_dict = r.json()
+
+                            output = {}
+
+                            #Get the desired entries from the returned json file:
+                            output = extract_flat_dict(ubiquiti_properties[i], r_dict)
+                            #print(output)
+
+                            return output
+
+                        except:
+                            raise
+                    
+                #This function recursviely runs to flatten the Initial defined dictionary (It's kinda dumb to have two of these but whatever):
+                # Inputs: 
+                #    properties (dict, with each entry having a value of None or another dict based on the structure)
+                # Outputs:
+                #    Array of Flattened key names (used for data headers and retrieving extracted data)
+                def extract_flat_keys(properties):
+                
+                    output = []
+
+                    for key, value in properties.items():
+                        #Check if it has any child properties:
+                        if value == None:
+                            output.append(key)
+                        else:
+                            #If it has children, recursively call to flatten:
+                            inner_output = extract_flat_keys(properties[key])
+                            #Iterate over the returned dictionary, and rewrite the keys with an underscore in between:
+                            for i_key in inner_output:
+                                output.append(key + "_" + i_key)
+
+                    return output
+
+                #This function recursviely runs to flatten the returned dictionary:
+                # Inputs: 
+                #    properties (dict, with each entry having a value of None or another dict)
+                #    data (dict, containing data corresponding to the keys in properties)
+                # Outputs:
+                #    Flattened dictionary with flattened key names and desired fields filled in from the data dict
+                def extract_flat_dict(properties,data):
+
+                    output = {}
+                    for key, value in properties.items():
+                        #Check if it has any child properties:
+                        if value == None:
+                            output[key] = data[key]
+                        else:
+                            #If it has children, recursively call to flatten:
+                            inner_output = extract_flat_dict(properties[key],data[key])
+                            #Iterate over the returned dictionary, and rewrite the keys with an underscore in between:
+                            for i_key, i_value in inner_output.items():
+                                output[ key + "_" + i_key] = inner_output[i_key]
+
+                    return output
+                
+                try:
+                    if self.airOSSession == None:
+                        self.airOSSession = self._airOSLogin()
+                    airOSdata = request_data(self.airOSSession)
+                except (requests.exceptions.HTTPError):
+                    result.connected = True
+                    result.syncing = False
+                    return result
+                except (requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.RequestException):
+                    result.connected = False
+                    result.syncing = False
+                    return result
+                
+                result.channel =     int(airOSdata.get("wireless_channel"))
+                result.frequency =   int(airOSdata.get("wireless_frequency"))
+                result.signalLevel = int(airOSdata.get("wireless_signal"))
+                result.noiseLevel =  int(airOSdata.get("wireless_noisef"))
+                result.txpower =     int(airOSdata.get("wireless_txpower"))
+                result.rxbitrate = float(airOSdata.get("wireless_rxrate"))
+                result.txbitrate = float(airOSdata.get("wireless_txrate"))
+
+                return result
+
 
             result.connected = True
             result.syncing = True
