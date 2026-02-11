@@ -161,6 +161,7 @@ def generateNodesFromConfig(cfgpath: str) -> List[WirelessInterfaceMonitor]:
             updatePeriod = 5.0
             loggingDirectory = ""
             deviceName = ""
+            nodeIndex = 0
 
             def createMonitorNode() -> WirelessInterfaceMonitor:
                 print(f"Creating Comms Monitor Node: {deviceName} ({MONITOR_NODE_PREFIX+deviceName})")
@@ -180,9 +181,10 @@ def generateNodesFromConfig(cfgpath: str) -> List[WirelessInterfaceMonitor]:
                 tokens = l.split('=')
                 try:
                     if tokens[0].strip() == "device_name":
-                        if not len(nodes) == 0: #use the current data to create a node, so long as this is not the first instance of device_name
+                        if nodeIndex != 0: #use the current data to create a node, so long as this is not the first instance of device_name
                             nodes.append(createMonitorNode())
                         deviceName = tokens[1].strip()
+                        nodeIndex += 1
                     elif tokens[0].strip() == "ip":
                         currentInferface.remoteAddr = tokens[1].strip()
                     elif tokens[0].strip() == "interface_name":
@@ -196,7 +198,7 @@ def generateNodesFromConfig(cfgpath: str) -> List[WirelessInterfaceMonitor]:
                             currentInferface.type = WirelessInterface.InterfaceType.GENERIC_IW
                         elif tokens[1].strip() == "MM_HALOW":
                             currentInferface.type = WirelessInterface.InterfaceType.MM_HALOW
-                        elif tokens[1].strip() == "UBIQUITI_AIROS" or tokens[1] == "AIROS":
+                        elif tokens[1].strip() == "UBIQUITI_AIROS" or tokens[1].strip() == "AIROS":
                             currentInferface.type = WirelessInterface.InterfaceType.UBIQUITI_AIROS
                     elif tokens[0].strip() == "update_period":
                         updatePeriod = float(tokens[1])
