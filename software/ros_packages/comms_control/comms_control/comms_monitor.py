@@ -10,7 +10,7 @@ from rclpy.node import Node
 from comms_control.RemoteWirelessControl import WirelessInterface
 from comms_control.RemoteWirelessControl import InterfaceStatus
 
-from rover2_control_interface.msg import GPSStatusMessage
+from sensor_msgs.msg import NavSatFix
 from rover2_control_interface.msg import CommsStatusMessage
 from std_msgs.msg import Float32
 
@@ -38,8 +38,8 @@ class WirelessInterfaceMonitor(Node):
         
         if (logging): #Create gps and imu subscriptions and logging timer if logging is enabled #TODO dynamically start and stop logging (ROS Service?)
             self.gpsSubscription = self.create_subscription(
-                GPSStatusMessage,
-                'tower/status/gps',
+                NavSatFix,
+                '/gps/fix',
                 self.gpsCallback,
                 10
             )
@@ -104,10 +104,10 @@ class WirelessInterfaceMonitor(Node):
             self.get_logger().warning(f"Failed to run commands on target {self.name} at {self.interface.remoteAddr}")
         self.get_logger().info(f"Published status for node {self.name}.", )
         
-    def gpsCallback(self, msg: GPSStatusMessage):
-        if (type(msg.rover_latitude) is float) and (type(msg.rover_longitude) is float):
-            self.lat = msg.rover_latitude
-            self.long = msg.rover_longitude
+    def gpsCallback(self, msg: NavSatFix):
+        if (type(msg.latitude) is float) and (type(msg.longitude) is float):
+            self.lat = msg.latitude
+            self.long = msg.longitude
         else:
             self.lat = 0
             self.long = 0

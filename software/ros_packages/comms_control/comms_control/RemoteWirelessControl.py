@@ -2,6 +2,12 @@ import typing
 import subprocess
 from enum import Enum
 
+#TODO
+# - Reimplement ubiquiti using ssh
+# - or at least fix login bug
+#   and timeout bug
+
+
 #web packages, used for AIR_OS
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
