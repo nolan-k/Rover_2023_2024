@@ -88,7 +88,7 @@ class WirelessInterfaceMonitor(Node):
         msg.frequency = noneToZero(self.status.frequency)
         msg.channel = noneToZero(self.status.channel)
         msg.rxmcs = str(self.status.rxmcs)
-        msg.txmcs = str(self.status.txbitrate)
+        msg.txmcs = str(self.status.txmcs)
         msg.rxbitrate = noneToFloatZero(self.status.rxbitrate)
         msg.txbitrate = noneToFloatZero(self.status.txbitrate)
         msg.txpower = noneToFloatZero(self.status.txpower)
@@ -126,7 +126,7 @@ class WirelessInterfaceMonitor(Node):
                 with open(self.logDirectory+self.logFilename, "w") as f:
                     f.write(f"datetime,latitude,longitude,heading,signalLevel,noiseLevel,frequency,channel,rxbitrate,txbitrate,txpower,channelWidth,connected,syncing\n")
             except(OSError, NotADirectoryError) as e:
-                self.get_logger().error(f"Error attempting to write to {self.logDirectory+self.logFilename} + {e.strerror}")
+                self.get_logger().error(f"Error attempting to write to {self.logDirectory+self.logFilename}: {e.strerror}")
         try:
             with open(self.logDirectory+self.logFilename, "a") as f:
                 f.write(
@@ -147,7 +147,7 @@ class WirelessInterfaceMonitor(Node):
                 )
 
         except(OSError, NotADirectoryError) as e:
-            self.get_logger().error(f"Error attempting to write to {self.logDirectory+self.logFilename}: + {e.strerror}")
+            self.get_logger().error(f"Error attempting to write to {self.logDirectory+self.logFilename}: {e.strerror}")
             
 
 # Read the config file and generate nodes to monitor each device.
