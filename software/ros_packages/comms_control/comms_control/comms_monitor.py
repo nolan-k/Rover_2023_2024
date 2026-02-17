@@ -1,6 +1,7 @@
 from typing import List
 from copy import deepcopy
 import datetime
+import time
 
 import rclpy
 from rclpy.executors import ExternalShutdownException
@@ -13,10 +14,11 @@ from comms_control.RemoteWirelessControl import InterfaceStatus
 from sensor_msgs.msg import NavSatFix
 from rover2_control_interface.msg import CommsStatusMessage
 from std_msgs.msg import Float32
-
 from os import getcwd
 
 MONITOR_NODE_PREFIX = 'comms_monitor_'
+GPS_MAX_CALLBACK_SEC = 10
+IMU_MAX_CALLBACK_SEC = 10
 
 class WirelessInterfaceMonitor(Node):
 
@@ -28,6 +30,8 @@ class WirelessInterfaceMonitor(Node):
     logFilename = ""
     name = ""
     status = InterfaceStatus(connected=False, syncing=False)
+    _gpsCallbackTimestamp = time.time()
+    _imuCallbackTimestamp = time.time()
 
     def __init__(self, name: str, interface: WirelessInterface, logging: bool = False, logPeriod: float = 5.0, updatePeriod = 5.0, logDirectory: str = ""): 
         self.logDirectory = logDirectory
@@ -68,6 +72,7 @@ class WirelessInterfaceMonitor(Node):
         )
 
     def statusPublisherCallback(self):
+
         def noneToZero(x: object):
             if x is None:
                 return 0
@@ -98,13 +103,25 @@ class WirelessInterfaceMonitor(Node):
             msg
         )
 
+        #print connection warnings
         if self.status.connected == False:
             self.get_logger().warning(f"Failed to connect to target {self.name} at {self.interface.remoteAddr}")
         elif self.status.syncing == False:
             self.get_logger().warning(f"Failed to run commands on target {self.name} at {self.interface.remoteAddr}")
         self.get_logger().info(f"Published status for node {self.name}.", )
+
+        #print gps/imu data warnings
+        currentTime = time.time()
+        if currentTime - self._imuCallbackTimestamp > IMU_MAX_CALLBACK_SEC:
+            self.get_logger().warn(f"Not recieving heading data: max callback interval ({IMU_MAX_CALLBACK_SEC} sec) exceeded.")
+        if currentTime - self._gpsCallbackTimestamp > GPS_MAX_CALLBACK_SEC:
+            self.get_logger().warn(f"Not recieving GPS data: max callback interval ({GPS_MAX_CALLBACK_SEC} sec) exceeded.")
+
         
     def gpsCallback(self, msg: NavSatFix):
+
+        self._gpsCallbackTimestamp = time.time()
+
         if (type(msg.latitude) is float) and (type(msg.longitude) is float):
             self.lat = msg.latitude
             self.long = msg.longitude
@@ -113,6 +130,9 @@ class WirelessInterfaceMonitor(Node):
             self.long = 0
     
     def imuCallback(self, msg: Float32):
+
+        self._imuCallbackTimestamp = time.time()
+
         if (type(msg.data) is float):
             self.heading = msg.data
         else:
