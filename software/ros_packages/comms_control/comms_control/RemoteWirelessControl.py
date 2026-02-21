@@ -98,7 +98,9 @@ class WirelessInterface:
         result = InterfaceStatus()
         try:
             def sshRun(command: str) -> subprocess.CompletedProcess[str]:
-                    return subprocess.run(['ssh', f'{self.username}@{self.remoteAddr}', '"{command}"'], text=True, capture_output=True, check=True, timeout=self.syncTimeoutSec)
+                    args = ['ssh', f'{self.username}@{self.remoteAddr}'] + command.split(' ')
+                    #args = f"ssh {self.username}@{self.remoteAddr} {command}"
+                    return subprocess.run(args, text=True, capture_output=True, check=True, shell=True,timeout=self.syncTimeoutSec)
 
             def intOrNone(input: str) -> typing.Optional[int]:
                 try:
