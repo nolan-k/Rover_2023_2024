@@ -100,7 +100,7 @@ class WirelessInterface:
             def sshRun(command: str) -> subprocess.CompletedProcess[str]:
                     args = ['ssh', f'{self.username}@{self.remoteAddr}'] + command.split(' ')
                     #args = f"ssh {self.username}@{self.remoteAddr} {command}"
-                    return subprocess.run(args, text=True, capture_output=True, check=True, shell=True,timeout=self.syncTimeoutSec)
+                    return subprocess.run(args, text=True, capture_output=True, check=True,timeout=self.syncTimeoutSec)
 
             def intOrNone(input: str) -> typing.Optional[int]:
                 try:
@@ -332,8 +332,9 @@ class WirelessInterface:
             result.connected = True
             result.syncing = True
 
-        except ChildProcessError as e:
-            if e.errno == 255:
+        except subprocess.CalledProcessError as e:
+            #print(f"ssh returned: {e.returncode} attempting to run {e.args}.\n Stdout: {e.stdout}\n Stderr: {e.stderr}")
+            if e.returncode == 255:
                 result.connected = False
                 result.syncing = False
                 return result
