@@ -118,22 +118,19 @@ class WirelessInterface:
                 #use iw to get interface info. This should contain the channel, frequency, channel width, and tx power.
                 output = sshRun(f"iw dev {self.interfaceName} info")
 
-                if output.returncode == 0:
-                    tokens = output.stdout.split()
-                    for i in range(0, len(tokens)):
-                        if (tokens[i] == 'channel'):
-                            i += 1
-                            result.channel = intOrNone(tokens[i])
-                            i += 1
-                            result.frequency = intOrNone(tokens[i].removeprefix('('))
-                        elif (tokens[i] == 'width:'):
-                            i += 1
-                            result.channelWidth = intOrNone(tokens[i])
-                        elif (tokens[i] == 'txpower'):
-                            i += 1
-                            result.txpower = floatOrNone(tokens[i])
-                else:
-                    print(f"Failed to connect to {self.username}@{self.remoteAddr} over ssh.")
+                tokens = output.stdout.split()
+                for i in range(0, len(tokens)):
+                    if (tokens[i] == 'channel'):
+                        i += 1
+                        result.channel = intOrNone(tokens[i])
+                        i += 1
+                        result.frequency = intOrNone(tokens[i].removeprefix('('))
+                    elif (tokens[i] == 'width:'):
+                        i += 1
+                        result.channelWidth = intOrNone(tokens[i])
+                    elif (tokens[i] == 'txpower'):
+                        i += 1
+                        result.txpower = floatOrNone(tokens[i])
 
                 #use iw to get link info. Should contain signal level, bitrates, and mcs info
                 output = sshRun(f"iw dev {self.interfaceName} link")
@@ -337,11 +334,11 @@ class WirelessInterface:
 
         except ChildProcessError as e:
             if e.errno == 255:
-                result.connected = True
+                result.connected = False
                 result.syncing = False
                 return result
             else:
-                result.connected = False
+                result.connected = True
                 result.syncing = False
                 return result
         except subprocess.TimeoutExpired as e:
