@@ -6,8 +6,7 @@
    <Domain Id="any">
      <General>
        <Interfaces>
-        <NetworkInterface autodetermine="false" address="10.42.0.100"/>
-        <NetworkInterface address = "127.0.0.1"/>
+        <NetworkInterface autodetermine="true">
       </Interfaces>
       <AllowMulticast>false</AllowMulticast>
       <MaxMessageSize>65500B</MaxMessageSize>

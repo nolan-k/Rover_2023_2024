@@ -6,7 +6,7 @@
    <Domain Id="any">
      <General>
        <Interfaces>
-        <NetworkInterface autodetermine="false" address="10.42.2.100"/>
+        <NetworkInterface autodetermine="true"/>
         <NetworkInterface address="127.0.0.1"/>
       </Interfaces>
       <AllowMulticast>false</AllowMulticast>
