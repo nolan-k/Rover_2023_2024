@@ -7,7 +7,6 @@
      <General>
        <Interfaces>
         <NetworkInterface autodetermine="true"/>
-        <NetworkInterface address="127.0.0.1"/>
       </Interfaces>
       <AllowMulticast>false</AllowMulticast>
       <MaxMessageSize>65500B</MaxMessageSize>
