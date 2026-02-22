@@ -6,8 +6,8 @@
    <Domain Id="any">
      <General>
        <Interfaces>
-        <NetworkInterface autodetermine="true">
-      </Interfaces>
+        <NetworkInterface autodetermine="true"/>
+       </Interfaces>
       <AllowMulticast>false</AllowMulticast>
       <MaxMessageSize>65500B</MaxMessageSize>
     </General>
