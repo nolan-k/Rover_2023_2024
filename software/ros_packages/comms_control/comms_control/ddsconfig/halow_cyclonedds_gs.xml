@@ -14,6 +14,8 @@
     <Discovery>
         <Peers>
             <Peer Address="10.42.0.100"/>
+            <Peer Address="10.42.2.100"/>
+            <Peer Address="127.0.0.1"/>
         </Peers>
         <EnableTopicDiscoveryEndpoints>true</EnableTopicDiscoveryEndpoints>
     </Discovery>
