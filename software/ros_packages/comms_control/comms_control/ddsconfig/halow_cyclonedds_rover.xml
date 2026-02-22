@@ -13,8 +13,9 @@
     </General>
       <Discovery>
         <Peers>
-            <Peer address="10.42.2.100"/>
+            <Peer Address="10.42.2.100"/>
         </Peers>
+        <EnableTopicDiscoveryEndpoints>true</EnableTopicDiscoveryEndpoints>
       </Discovery>
   </Domain>
 </CycloneDDS>

@@ -11,10 +11,11 @@
       <AllowMulticast>false</AllowMulticast>
       <MaxMessageSize>65500B</MaxMessageSize>
     </General>
-      <Discovery>
+    <Discovery>
         <Peers>
-            <Peer address="10.42.0.100"/>
+            <Peer Address="10.42.0.100"/>
         </Peers>
-      </Discovery>
+        <EnableTopicDiscoveryEndpoints>true</EnableTopicDiscoveryEndpoints>
+    </Discovery>
   </Domain>
 </CycloneDDS>
