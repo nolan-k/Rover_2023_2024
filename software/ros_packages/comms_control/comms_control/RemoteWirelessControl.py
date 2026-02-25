@@ -181,16 +181,16 @@ class WirelessInterface:
                     elif tokens[0] == "Current Operating BW MHz":
                         result.channelWidth = intOrNone(tokens[1])
 
-                output = sshRun(f"iwinfo {self.interfaceName} info") 
+                output = sshRun(f"iwinfo {self.interfaceName} info")
+
+                lines = output.stdout.splitlines()
 
                 for l in lines:
                     tokens = l.split(':')
                     if tokens[0].strip() == "Tx-Power":
-                        result.txpower = intOrNone(tokens[1])
-                    elif tokens[0].strip() == "Mode":
-                        result.channel = intOrNone(tokens[3])
+                        result.txpower = floatOrNone(tokens[1].strip().split(' ')[0])
                     elif tokens[0].strip() == "Bit Rate":
-                        result.txbitrate = floatOrNone(tokens[1])  
+                        result.txbitrate = floatOrNone(tokens[1].strip().split(' ')[0])  
 
             elif self.type == WirelessInterface.InterfaceType.UBIQUITI_AIROS:
                 ubiquiti_properties = {"wireless" : {"channel":None, "frequency":None, "opmode":None, "signal":None, "noisef":None, "rssi":None, "txpower":None, "distance":None, "ccq":None, "rxrate":None, "txrate":None}}
